@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0a0a0a">
+    <title>ClearVue - Running Diagnostic</title>
+    <link rel="stylesheet" href="../shared/static/tests.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Pre-test intro screen -->
+        <div class="test-header">
+            <div class="brand">ClearVue</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+            <div class="progress-text">Ready</div>
+        </div>
+        <div class="test-body">
+            <h2>iPhone Diagnostic</h2>
+            <p class="test-description">
+                You'll run through 6 quick functional tests. Each takes a few seconds.
+                You'll need to grant camera and microphone access when prompted.
+            </p>
+        </div>
+        <div class="test-actions">
+            <a href="index.html" class="btn btn-skip" style="text-align:center;text-decoration:none">Back</a>
+            <button class="btn btn-start" id="startBtn">Begin Tests</button>
+        </div>
+    </div>
+
+    <script src="../shared/static/tests.js"></script>
+    <script>
+        const app = document.getElementById('app');
+        const startBtn = document.getElementById('startBtn');
+
+        startBtn.addEventListener('click', () => {
+            const runner = new TestRunner(app);
+            runner.start();
+        });
+
+        // Listen for completion (future use: PDF gen, share links)
+        app.addEventListener('testscomplete', (e) => {
+            console.log('ClearVue diagnostic complete:', e.detail);
+        });
+    </script>
+</body>
+</html>

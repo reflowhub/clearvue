@@ -1,0 +1,7 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/c2c/index.html" },
+    { "source": "/diagnose", "destination": "/c2c/diagnose.html" },
+    { "source": "/diagnose.html", "destination": "/c2c/diagnose.html" }
+  ]
+}

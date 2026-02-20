@@ -355,6 +355,188 @@ body {
     color: #48484a;
 }
 
+/* --- Not Testable Button & Badge --- */
+
+.btn-not-testable {
+    background: #48484a;
+    color: #a1a1a6;
+}
+
+.result-badge.not-testable {
+    background: rgba(72, 72, 74, 0.2);
+    color: #48484a;
+}
+
+.results-note {
+    font-size: 0.8125rem;
+    color: #48484a;
+}
+
+/* --- Display Quality Test --- */
+
+.display-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.display-overlay-label {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.35);
+    padding: 0.5rem 1.25rem;
+    border-radius: 980px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.display-instruction {
+    font-size: 0.9375rem;
+    color: #a1a1a6;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+}
+
+/* --- Unsupported Test --- */
+
+.unsupported-icon {
+    font-size: 3rem;
+    color: #48484a;
+    margin-bottom: 1rem;
+}
+
+.unsupported-reason {
+    font-size: 0.9375rem;
+    color: #86868b;
+    line-height: 1.5;
+    max-width: 20rem;
+    margin-bottom: 2rem;
+}
+
+/* --- Connectivity / Geolocation --- */
+
+.connectivity-status {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.connectivity-status.success { color: #30d158; }
+.connectivity-status.error { color: #ff453a; }
+
+.connectivity-info {
+    font-size: 0.875rem;
+    color: #86868b;
+    line-height: 1.6;
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 2rem;
+}
+
+/* --- Motion Sensor --- */
+
+.motion-visual {
+    width: 8rem;
+    height: 8rem;
+    border-radius: 50%;
+    background: #1d1d1f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.motion-dot {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    background: #30d158;
+    transition: transform 0.1s ease-out;
+}
+
+.motion-data {
+    font-size: 0.75rem;
+    color: #86868b;
+    font-family: 'SF Mono', 'Menlo', monospace;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.5;
+    margin-bottom: 2rem;
+}
+
+/* --- Vibration --- */
+
+.vibration-note {
+    font-size: 0.875rem;
+    color: #86868b;
+    margin-bottom: 2rem;
+}
+
+/* --- Physical Buttons --- */
+
+.button-prompt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+}
+
+.button-prompt-step {
+    font-size: 0.75rem;
+    color: #86868b;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.button-prompt-label {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.button-prompt-hint {
+    font-size: 0.9375rem;
+    color: #a1a1a6;
+}
+
+.button-prompt-hint.detected {
+    color: #30d158;
+    font-weight: 600;
+}
+
+.buttons-summary {
+    width: 100%;
+    max-width: 20rem;
+    margin-bottom: 2rem;
+}
+
+.button-step-result {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.625rem 0;
+    border-bottom: 1px solid #1d1d1f;
+    font-size: 0.9375rem;
+}
+
+.button-step-result:last-child { border-bottom: none; }
+
+.step-pass { color: #30d158; font-weight: 600; }
+.step-fail { color: #ff453a; font-weight: 600; }
+
 /* --- Utility --- */
 
 .hidden { display: none !important; }

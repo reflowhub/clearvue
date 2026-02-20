@@ -3,3 +3,10 @@
 __pycache__/
 output/
 .env
+
+# Xcode
+ios/ClearVue/ClearVue.xcodeproj/xcuserdata/
+ios/ClearVue/ClearVue.xcodeproj/project.xcworkspace/xcuserdata/
+*.xcuserstate
+DerivedData/
+build/

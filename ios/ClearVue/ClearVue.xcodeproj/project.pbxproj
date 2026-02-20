@@ -1,0 +1,537 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A10001AA /* ClearVueApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10001AB /* ClearVueApp.swift */; };
+		A10002AA /* TestDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10002AB /* TestDefinition.swift */; };
+		A10003AA /* TestResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10003AB /* TestResult.swift */; };
+		A10004AA /* DiagnosticReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10004AB /* DiagnosticReport.swift */; };
+		A10005AA /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10005AB /* Theme.swift */; };
+		A10006AA /* TestRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10006AB /* TestRunner.swift */; };
+		A10007AA /* IntroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10007AB /* IntroView.swift */; };
+		A10008AA /* TestContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10008AB /* TestContainerView.swift */; };
+		A10009AA /* ResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10009AB /* ResultsView.swift */; };
+		A10010AA /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10010AB /* ProgressBarView.swift */; };
+		A10011AA /* TestActionButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10011AB /* TestActionButtons.swift */; };
+		A10012AA /* StatusBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10012AB /* StatusBadgeView.swift */; };
+		A10013AA /* CameraPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10013AB /* CameraPreviewView.swift */; };
+		A10014AA /* ManualTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10014AB /* ManualTestView.swift */; };
+		A10015AA /* FaceIDTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10015AB /* FaceIDTestView.swift */; };
+		A10016AA /* DisplayTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10016AB /* DisplayTestView.swift */; };
+		A10017AA /* CameraTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10017AB /* CameraTestView.swift */; };
+		A10018AA /* TouchTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10018AB /* TouchTestView.swift */; };
+		A10019AA /* MicrophoneTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10019AB /* MicrophoneTestView.swift */; };
+		A10020AA /* SpeakerTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10020AB /* SpeakerTestView.swift */; };
+		A10021AA /* ConnectivityTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10021AB /* ConnectivityTestView.swift */; };
+		A10022AA /* BluetoothTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10022AB /* BluetoothTestView.swift */; };
+		A10023AA /* LocationTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10023AB /* LocationTestView.swift */; };
+		A10024AA /* MotionTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10024AB /* MotionTestView.swift */; };
+		A10025AA /* VibrationTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10025AB /* VibrationTestView.swift */; };
+		A10026AA /* ButtonsTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10026AB /* ButtonsTestView.swift */; };
+		A10027AA /* NFCTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10027AB /* NFCTestView.swift */; };
+		A10028AA /* FaceIDService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10028AB /* FaceIDService.swift */; };
+		A10029AA /* CameraService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10029AB /* CameraService.swift */; };
+		A10030AA /* AudioService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10030AB /* AudioService.swift */; };
+		A10031AA /* ConnectivityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10031AB /* ConnectivityService.swift */; };
+		A10032AA /* BluetoothService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10032AB /* BluetoothService.swift */; };
+		A10033AA /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10033AB /* LocationService.swift */; };
+		A10034AA /* MotionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10034AB /* MotionService.swift */; };
+		A10035AA /* NFCService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10035AB /* NFCService.swift */; };
+		A10036AA /* PDFGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10036AB /* PDFGenerator.swift */; };
+		A10037AA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A10037AB /* Assets.xcassets */; };
+		A10040AA /* DeviceInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10040AB /* DeviceInfoView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A1000000 /* ClearVue.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ClearVue.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A10001AB /* ClearVueApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClearVueApp.swift; sourceTree = "<group>"; };
+		A10002AB /* TestDefinition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDefinition.swift; sourceTree = "<group>"; };
+		A10003AB /* TestResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestResult.swift; sourceTree = "<group>"; };
+		A10004AB /* DiagnosticReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticReport.swift; sourceTree = "<group>"; };
+		A10005AB /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		A10006AB /* TestRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestRunner.swift; sourceTree = "<group>"; };
+		A10007AB /* IntroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroView.swift; sourceTree = "<group>"; };
+		A10008AB /* TestContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestContainerView.swift; sourceTree = "<group>"; };
+		A10009AB /* ResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsView.swift; sourceTree = "<group>"; };
+		A10010AB /* ProgressBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBarView.swift; sourceTree = "<group>"; };
+		A10011AB /* TestActionButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestActionButtons.swift; sourceTree = "<group>"; };
+		A10012AB /* StatusBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBadgeView.swift; sourceTree = "<group>"; };
+		A10013AB /* CameraPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreviewView.swift; sourceTree = "<group>"; };
+		A10014AB /* ManualTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualTestView.swift; sourceTree = "<group>"; };
+		A10015AB /* FaceIDTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceIDTestView.swift; sourceTree = "<group>"; };
+		A10016AB /* DisplayTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayTestView.swift; sourceTree = "<group>"; };
+		A10017AB /* CameraTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraTestView.swift; sourceTree = "<group>"; };
+		A10018AB /* TouchTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchTestView.swift; sourceTree = "<group>"; };
+		A10019AB /* MicrophoneTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicrophoneTestView.swift; sourceTree = "<group>"; };
+		A10020AB /* SpeakerTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakerTestView.swift; sourceTree = "<group>"; };
+		A10021AB /* ConnectivityTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityTestView.swift; sourceTree = "<group>"; };
+		A10022AB /* BluetoothTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothTestView.swift; sourceTree = "<group>"; };
+		A10023AB /* LocationTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationTestView.swift; sourceTree = "<group>"; };
+		A10024AB /* MotionTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionTestView.swift; sourceTree = "<group>"; };
+		A10025AB /* VibrationTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VibrationTestView.swift; sourceTree = "<group>"; };
+		A10026AB /* ButtonsTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonsTestView.swift; sourceTree = "<group>"; };
+		A10027AB /* NFCTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFCTestView.swift; sourceTree = "<group>"; };
+		A10028AB /* FaceIDService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceIDService.swift; sourceTree = "<group>"; };
+		A10029AB /* CameraService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraService.swift; sourceTree = "<group>"; };
+		A10030AB /* AudioService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioService.swift; sourceTree = "<group>"; };
+		A10031AB /* ConnectivityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityService.swift; sourceTree = "<group>"; };
+		A10032AB /* BluetoothService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothService.swift; sourceTree = "<group>"; };
+		A10033AB /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
+		A10034AB /* MotionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionService.swift; sourceTree = "<group>"; };
+		A10035AB /* NFCService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFCService.swift; sourceTree = "<group>"; };
+		A10036AB /* PDFGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFGenerator.swift; sourceTree = "<group>"; };
+		A10037AB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A10038AB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A10039AB /* ClearVue.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ClearVue.entitlements; sourceTree = "<group>"; };
+		A10040AB /* DeviceInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceInfoView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A1F00001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A1G00000 = {
+			isa = PBXGroup;
+			children = (
+				A1G00001 /* ClearVue */,
+				A1G00099 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A1G00001 /* ClearVue */ = {
+			isa = PBXGroup;
+			children = (
+				A10001AB /* ClearVueApp.swift */,
+				A10038AB /* Info.plist */,
+				A10039AB /* ClearVue.entitlements */,
+				A1G00002 /* Models */,
+				A1G00003 /* Services */,
+				A1G00004 /* Views */,
+				A1G00008 /* Theme */,
+				A10037AB /* Assets.xcassets */,
+			);
+			path = ClearVue;
+			sourceTree = "<group>";
+		};
+		A1G00002 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				A10002AB /* TestDefinition.swift */,
+				A10003AB /* TestResult.swift */,
+				A10004AB /* DiagnosticReport.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		A1G00003 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				A10006AB /* TestRunner.swift */,
+				A10028AB /* FaceIDService.swift */,
+				A10029AB /* CameraService.swift */,
+				A10030AB /* AudioService.swift */,
+				A10031AB /* ConnectivityService.swift */,
+				A10032AB /* BluetoothService.swift */,
+				A10033AB /* LocationService.swift */,
+				A10034AB /* MotionService.swift */,
+				A10035AB /* NFCService.swift */,
+				A10036AB /* PDFGenerator.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		A1G00004 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A10007AB /* IntroView.swift */,
+				A10040AB /* DeviceInfoView.swift */,
+				A10008AB /* TestContainerView.swift */,
+				A10009AB /* ResultsView.swift */,
+				A1G00005 /* Tests */,
+				A1G00006 /* Components */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		A1G00005 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				A10014AB /* ManualTestView.swift */,
+				A10015AB /* FaceIDTestView.swift */,
+				A10016AB /* DisplayTestView.swift */,
+				A10017AB /* CameraTestView.swift */,
+				A10018AB /* TouchTestView.swift */,
+				A10019AB /* MicrophoneTestView.swift */,
+				A10020AB /* SpeakerTestView.swift */,
+				A10021AB /* ConnectivityTestView.swift */,
+				A10022AB /* BluetoothTestView.swift */,
+				A10023AB /* LocationTestView.swift */,
+				A10024AB /* MotionTestView.swift */,
+				A10025AB /* VibrationTestView.swift */,
+				A10026AB /* ButtonsTestView.swift */,
+				A10027AB /* NFCTestView.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		A1G00006 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				A10010AB /* ProgressBarView.swift */,
+				A10011AB /* TestActionButtons.swift */,
+				A10012AB /* StatusBadgeView.swift */,
+				A10013AB /* CameraPreviewView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		A1G00008 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				A10005AB /* Theme.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		A1G00099 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A1000000 /* ClearVue.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A1T00001 /* ClearVue */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1C00003 /* Build configuration list for PBXNativeTarget "ClearVue" */;
+			buildPhases = (
+				A1S00001 /* Sources */,
+				A1F00001 /* Frameworks */,
+				A1R00001 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ClearVue;
+			productName = ClearVue;
+			productReference = A1000000 /* ClearVue.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A1P00001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1540;
+				LastUpgradeCheck = 2620;
+				TargetAttributes = {
+					A1T00001 = {
+						CreatedOnToolsVersion = 15.4;
+					};
+				};
+			};
+			buildConfigurationList = A1C00001 /* Build configuration list for PBXProject "ClearVue" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A1G00000;
+			productRefGroup = A1G00099 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A1T00001 /* ClearVue */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A1R00001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10037AA /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A1S00001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10001AA /* ClearVueApp.swift in Sources */,
+				A10002AA /* TestDefinition.swift in Sources */,
+				A10003AA /* TestResult.swift in Sources */,
+				A10004AA /* DiagnosticReport.swift in Sources */,
+				A10005AA /* Theme.swift in Sources */,
+				A10006AA /* TestRunner.swift in Sources */,
+				A10007AA /* IntroView.swift in Sources */,
+				A10008AA /* TestContainerView.swift in Sources */,
+				A10009AA /* ResultsView.swift in Sources */,
+				A10010AA /* ProgressBarView.swift in Sources */,
+				A10011AA /* TestActionButtons.swift in Sources */,
+				A10012AA /* StatusBadgeView.swift in Sources */,
+				A10013AA /* CameraPreviewView.swift in Sources */,
+				A10014AA /* ManualTestView.swift in Sources */,
+				A10015AA /* FaceIDTestView.swift in Sources */,
+				A10016AA /* DisplayTestView.swift in Sources */,
+				A10017AA /* CameraTestView.swift in Sources */,
+				A10018AA /* TouchTestView.swift in Sources */,
+				A10019AA /* MicrophoneTestView.swift in Sources */,
+				A10020AA /* SpeakerTestView.swift in Sources */,
+				A10021AA /* ConnectivityTestView.swift in Sources */,
+				A10022AA /* BluetoothTestView.swift in Sources */,
+				A10023AA /* LocationTestView.swift in Sources */,
+				A10024AA /* MotionTestView.swift in Sources */,
+				A10025AA /* VibrationTestView.swift in Sources */,
+				A10026AA /* ButtonsTestView.swift in Sources */,
+				A10027AA /* NFCTestView.swift in Sources */,
+				A10028AA /* FaceIDService.swift in Sources */,
+				A10029AA /* CameraService.swift in Sources */,
+				A10030AA /* AudioService.swift in Sources */,
+				A10031AA /* ConnectivityService.swift in Sources */,
+				A10032AA /* BluetoothService.swift in Sources */,
+				A10033AA /* LocationService.swift in Sources */,
+				A10034AA /* MotionService.swift in Sources */,
+				A10035AA /* NFCService.swift in Sources */,
+				A10036AA /* PDFGenerator.swift in Sources */,
+				A10040AA /* DeviceInfoView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		A1B00001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		A1B00002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A1B00003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ClearVue/ClearVue.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ClearVue/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ClearVue;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = app.rhex.clearvue;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		A1B00004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ClearVue/ClearVue.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ClearVue/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ClearVue;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = app.rhex.clearvue;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A1C00001 /* Build configuration list for PBXProject "ClearVue" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1B00001 /* Debug */,
+				A1B00002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A1C00003 /* Build configuration list for PBXNativeTarget "ClearVue" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1B00003 /* Debug */,
+				A1B00004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A1P00001 /* Project object */;
+}

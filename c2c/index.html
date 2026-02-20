@@ -72,6 +72,31 @@
 
         .cta:active { opacity: 0.7; }
 
+        .cta-secondary-wrap {
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .cta-secondary {
+            display: inline-block;
+            padding: 0.875rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #f5f5f7;
+            background: transparent;
+            border: 1.5px solid #48484a;
+            border-radius: 980px;
+            cursor: default;
+            opacity: 0.6;
+        }
+
+        .cta-secondary-note {
+            display: block;
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: #48484a;
+        }
+
         .features {
             display: flex;
             flex-direction: column;
@@ -110,6 +135,10 @@
             line-height: 1.4;
         }
 
+        .feature-app {
+            border: 1px solid #2c2c2e;
+        }
+
         footer {
             text-align: center;
             padding: 1.5rem;
@@ -122,8 +151,12 @@
     <div class="hero">
         <div class="brand">ClearVue</div>
         <h1>iPhone Diagnostic</h1>
-        <p>Run a free diagnostic on your iPhone. Get a shareable report with verified test results for prospective buyers.</p>
-        <a href="diagnose.html" class="cta">Start Free Diagnostic</a>
+        <p>Try the browser demo, or get the full experience with the native iOS app.</p>
+        <a href="diagnose.html" class="cta">Try Browser Demo</a>
+        <div class="cta-secondary-wrap">
+            <span class="cta-secondary">Get the iOS App</span>
+            <span class="cta-secondary-note">Coming soon to the App Store</span>
+        </div>
     </div>
 
     <div class="features">
@@ -148,9 +181,16 @@
                 <p>All tests run locally on your device in the browser</p>
             </div>
         </div>
+        <div class="feature feature-app">
+            <div class="feature-icon">6+</div>
+            <div class="feature-text">
+                <h3>More Verified in iOS App</h3>
+                <p>Bluetooth, NFC, Face ID, and more &mdash; no browser limitations</p>
+            </div>
+        </div>
     </div>
 
-    <footer>&copy; 2026 ClearVue &mdash; clearvue.rhex.app</footer>
+    <footer>&copy; 2026 ClearVue &mdash; clearvue.rhex.app &middot; iOS app coming soon</footer>
     <script src="../shared/static/device-gate.js"></script>
 </body>
 </html>

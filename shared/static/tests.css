@@ -537,6 +537,58 @@ body {
 .step-pass { color: #30d158; font-weight: 600; }
 .step-fail { color: #ff453a; font-weight: 600; }
 
+/* --- App Promo Banner (Results) --- */
+
+.app-promo {
+    background: #1d1d1f;
+    border: 1px solid #2c2c2e;
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.app-promo-badge {
+    display: inline-block;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #0a84ff;
+    background: rgba(10, 132, 255, 0.15);
+    padding: 0.25rem 0.625rem;
+    border-radius: 6px;
+    margin-bottom: 0.75rem;
+}
+
+.app-promo-text {
+    font-size: 0.875rem;
+    color: #a1a1a6;
+    line-height: 1.5;
+    margin-bottom: 0.5rem;
+}
+
+.app-promo-note {
+    font-size: 0.75rem;
+    color: #48484a;
+}
+
+/* --- App-available verification label --- */
+
+.result-verification.app-available {
+    color: #0a84ff;
+    font-style: normal;
+}
+
+/* --- Unsupported test app hint --- */
+
+.unsupported-app-hint {
+    font-size: 0.8125rem;
+    color: #0a84ff;
+    font-weight: 500;
+    margin-top: 0.5rem;
+}
+
 /* --- Utility --- */
 
 .hidden { display: none !important; }

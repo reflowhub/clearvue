@@ -101,10 +101,10 @@ const TEST_DEFS = [
     {
         id: 'bluetooth',
         name: 'Bluetooth',
-        description: 'Web Bluetooth is not supported in Safari. This test cannot be performed in the browser.',
+        description: 'Not available in browser. This test runs in the ClearVue iOS app.',
         type: 'unsupported',
         verification: 'untestable',
-        reason: 'Web Bluetooth API is not available in Safari on iOS.',
+        reason: 'Bluetooth testing requires native hardware access. Available in the ClearVue iOS app.',
     },
     {
         id: 'cellular',
@@ -148,10 +148,10 @@ const TEST_DEFS = [
     {
         id: 'nfc',
         name: 'NFC',
-        description: 'Web NFC is not supported in Safari. This test cannot be performed in the browser.',
+        description: 'Not available in browser. This test runs in the ClearVue iOS app.',
         type: 'unsupported',
         verification: 'untestable',
-        reason: 'Web NFC API is not available in Safari on iOS.',
+        reason: 'NFC testing requires native hardware access. Available in the ClearVue iOS app.',
     },
 ];
 
@@ -570,8 +570,9 @@ class TestRunner {
 
     _setupUnsupported(content, actions, test) {
         content.innerHTML = `
-            <div class="unsupported-icon">&#x2718;</div>
+            <div class="unsupported-icon">&#x1F4F1;</div>
             <div class="unsupported-reason">${test.reason}</div>
+            <div class="unsupported-app-hint">Available in the ClearVue iOS app</div>
         `;
         actions.innerHTML = `
             <button class="btn btn-not-testable" data-action="not_testable">Mark Not Testable</button>
@@ -922,7 +923,7 @@ class TestRunner {
             const verLabel = test.verification === 'self-reported'
                 ? '<span class="result-verification">Self-reported</span>'
                 : test.verification === 'untestable'
-                ? '<span class="result-verification">Untestable in browser</span>'
+                ? '<span class="result-verification app-available">Available in iOS app</span>'
                 : '';
 
             listHTML += `
@@ -940,6 +941,11 @@ class TestRunner {
                     <div class="results-score">${passed} / ${tested} tests passed${scoreExtra}</div>
                     <div class="results-timestamp">${human}</div>
                     <div class="results-timestamp">${iso}</div>
+                </div>
+                <div class="app-promo">
+                    <div class="app-promo-badge">iOS App</div>
+                    <div class="app-promo-text">Get the full ClearVue experience &mdash; Bluetooth, NFC, Face ID, and 3 more tests verified automatically.</div>
+                    <div class="app-promo-note">Coming soon to the App Store</div>
                 </div>
                 <ul class="results-list">${listHTML}</ul>
                 <div class="results-actions">

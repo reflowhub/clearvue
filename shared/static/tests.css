@@ -303,6 +303,16 @@ body {
 .result-name {
     font-size: 0.9375rem;
     font-weight: 500;
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+}
+
+.result-verification {
+    font-size: 0.6875rem;
+    font-weight: 400;
+    color: #86868b;
+    font-style: italic;
 }
 
 .result-badge {

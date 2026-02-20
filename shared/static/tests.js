@@ -15,8 +15,8 @@ const TEST_DEFS = [
     {
         id: 'faceid',
         name: 'Face ID',
-        description: 'Lock your device, then unlock with Face ID. Did it work?',
-        type: 'manual',
+        description: 'Tap the button below to verify Face ID with your device.',
+        type: 'biometric',
     },
     {
         id: 'front_cam',
@@ -100,6 +100,7 @@ class TestRunner {
         const actions = this.container.querySelector('#testActions');
 
         switch (test.type) {
+            case 'biometric': this._setupBiometric(content, actions, test); break;
             case 'manual':   this._setupManual(content, actions, test); break;
             case 'camera':   this._setupCamera(content, actions, test); break;
             case 'touch':    this._setupTouch(content, actions, test); break;
@@ -129,7 +130,63 @@ class TestRunner {
         this._renderTest();
     }
 
-    /* --- Manual Test (Face ID) ------------------------------------ */
+    /* --- Biometric Test (Face ID via WebAuthn) --------------------- */
+
+    async _setupBiometric(content, actions, test) {
+        // Check if platform authenticator (Face ID / Touch ID) is available
+        const available = window.PublicKeyCredential &&
+            await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().catch(() => false);
+
+        if (!available) {
+            content.innerHTML = `<div class="audio-status">Biometric authentication not available on this device.</div>`;
+            this._addButtons(actions, test.id);
+            return;
+        }
+
+        content.innerHTML = `<div class="audio-status" id="bioStatus">Ready to verify</div>`;
+        actions.innerHTML = `<button class="btn btn-start" id="bioStartBtn">Verify Face ID</button>`;
+
+        const statusEl = this.container.querySelector('#bioStatus');
+        const startBtn = this.container.querySelector('#bioStartBtn');
+
+        startBtn.addEventListener('click', async () => {
+            startBtn.disabled = true;
+            statusEl.textContent = 'Waiting for Face ID...';
+
+            try {
+                const challenge = new Uint8Array(32);
+                crypto.getRandomValues(challenge);
+
+                await navigator.credentials.create({
+                    publicKey: {
+                        challenge,
+                        rp: { name: 'ClearVue Diagnostic' },
+                        user: {
+                            id: new Uint8Array(16),
+                            name: 'diagnostic',
+                            displayName: 'ClearVue Diagnostic',
+                        },
+                        pubKeyCredParams: [{ type: 'public-key', alg: -7 }],
+                        authenticatorSelection: {
+                            authenticatorAttachment: 'platform',
+                            userVerification: 'required',
+                        },
+                        timeout: 60000,
+                    },
+                });
+
+                statusEl.textContent = 'Face ID verified!';
+                statusEl.className = 'audio-status';
+                setTimeout(() => this._record(test.id, 'pass'), 600);
+            } catch (err) {
+                statusEl.textContent = 'Face ID verification failed';
+                statusEl.className = 'audio-status';
+                this._addButtons(actions, test.id);
+            }
+        });
+    }
+
+    /* --- Manual Test ---------------------------------------------- */
 
     _setupManual(content, actions, test) {
         this._addButtons(actions, test.id);

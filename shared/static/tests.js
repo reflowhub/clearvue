@@ -281,17 +281,24 @@ class TestRunner {
     /* --- Touch Screen Test ---------------------------------------- */
 
     _setupTouch(content, actions, test) {
-        const total = 24; // 4x6
+        const total = 60; // 6x10
         let touched = 0;
         const touchedSet = new Set();
 
-        content.innerHTML = `
+        // Create fullscreen overlay
+        const overlay = document.createElement('div');
+        overlay.className = 'touch-fullscreen';
+        overlay.innerHTML = `
             <div class="touch-grid" id="touchGrid"></div>
-            <div class="touch-counter" id="touchCounter">0 / ${total}</div>
+            <div class="touch-bottom-bar">
+                <div class="touch-counter" id="touchCounter">0 / ${total}</div>
+                <button class="touch-fail-btn" id="touchFailBtn">Fail</button>
+            </div>
         `;
+        document.body.appendChild(overlay);
 
-        const grid = this.container.querySelector('#touchGrid');
-        const counter = this.container.querySelector('#touchCounter');
+        const grid = overlay.querySelector('#touchGrid');
+        const counter = overlay.querySelector('#touchCounter');
 
         for (let i = 0; i < total; i++) {
             const cell = document.createElement('div');
@@ -299,6 +306,8 @@ class TestRunner {
             cell.dataset.index = i;
             grid.appendChild(cell);
         }
+
+        const cleanup = () => { overlay.remove(); };
 
         const handleTouch = (e) => {
             e.preventDefault();
@@ -311,6 +320,7 @@ class TestRunner {
                     touched++;
                     counter.textContent = `${touched} / ${total}`;
                     if (touched >= total) {
+                        cleanup();
                         this._record(test.id, 'pass');
                     }
                 }
@@ -322,7 +332,13 @@ class TestRunner {
         grid.addEventListener('mousedown', handleTouch);
         grid.addEventListener('mouseover', (e) => { if (e.buttons === 1) handleTouch(e); });
 
-        this._addButtons(actions, test.id, { passDisabled: true });
+        overlay.querySelector('#touchFailBtn').addEventListener('click', () => {
+            cleanup();
+            this._record(test.id, 'fail');
+        });
+
+        // Hide normal content/actions since we're fullscreen
+        content.innerHTML = '<p style="color:#86868b">Touch test running fullscreen...</p>';
     }
 
     /* --- Microphone Test ------------------------------------------ */

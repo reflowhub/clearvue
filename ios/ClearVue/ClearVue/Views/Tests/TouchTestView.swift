@@ -6,50 +6,45 @@ struct TouchTestView: View {
 
     @State private var touchedCells: Set<Int> = []
 
-    private let columns = 4
-    private let rows = 6
+    private let columns = 6
+    private let rows = 10
     private var totalCells: Int { columns * rows }
 
     var body: some View {
-        VStack(spacing: 0) {
-            Spacer()
+        ZStack {
+            Color(red: 0x0A/255, green: 0x0A/255, blue: 0x0A/255)
+                .ignoresSafeArea()
 
-            VStack(spacing: 16) {
-                Text(test.name)
-                    .font(.title2.weight(.bold))
-                    .foregroundColor(Theme.textPrimary)
-
-                Text(test.description)
-                    .font(.body)
-                    .foregroundColor(Theme.textSecondary)
-                    .multilineTextAlignment(.center)
-                    .frame(maxWidth: 320)
-
+            VStack(spacing: 0) {
                 TouchGridView(
                     columns: columns,
                     rows: rows,
                     touchedCells: $touchedCells
                 )
-                .aspectRatio(2.0 / 3.0, contentMode: .fit)
-                .frame(maxWidth: 320)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
 
-                Text("\(touchedCells.count) / \(totalCells)")
-                    .font(.subheadline)
-                    .foregroundColor(Theme.textMuted)
-                    .monospacedDigit()
+                HStack {
+                    Text("\(touchedCells.count) / \(totalCells)")
+                        .font(.subheadline)
+                        .foregroundColor(Theme.textMuted)
+                        .monospacedDigit()
+
+                    Spacer()
+
+                    Button("Fail") {
+                        onComplete(.fail, nil)
+                    }
+                    .font(.subheadline.weight(.semibold))
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 10)
+                    .background(Color(red: 1, green: 0x45/255, blue: 0x3A/255))
+                    .foregroundColor(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
             }
-            .padding(.horizontal, 24)
-
-            Spacer()
-
-            TestActionButtons(
-                onPass: { onComplete(.pass, "\(touchedCells.count)/\(totalCells) cells touched") },
-                onFail: { onComplete(.fail, nil) },
-                onSkip: { onComplete(.skipped, nil) },
-                passDisabled: touchedCells.count < totalCells
-            )
         }
+        .ignoresSafeArea()
         .onChange(of: touchedCells.count) { newCount in
             if newCount >= totalCells {
                 onComplete(.pass, "All \(totalCells) cells touched")
@@ -88,7 +83,7 @@ class TouchGridUIView: UIView {
     var touchedCells: Set<Int> = []
     var onCellTouched: ((Int) -> Void)?
 
-    private let gap: CGFloat = 4
+    private let gap: CGFloat = 2
     private let untouchedColor = UIColor(red: 0x1D/255, green: 0x1D/255, blue: 0x1F/255, alpha: 1)
     private let touchedColor = UIColor(red: 0x30/255, green: 0xD1/255, blue: 0x58/255, alpha: 1)
 
@@ -102,7 +97,7 @@ class TouchGridUIView: UIView {
                 let x = CGFloat(col) * (cellWidth + gap)
                 let y = CGFloat(row) * (cellHeight + gap)
                 let cellRect = CGRect(x: x, y: y, width: cellWidth, height: cellHeight)
-                let path = UIBezierPath(roundedRect: cellRect, cornerRadius: 6)
+                let path = UIBezierPath(roundedRect: cellRect, cornerRadius: 4)
                 let color = touchedCells.contains(index) ? touchedColor : untouchedColor
                 color.setFill()
                 path.fill()

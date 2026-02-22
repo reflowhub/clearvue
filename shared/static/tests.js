@@ -8,6 +8,60 @@
  */
 
 /* ------------------------------------------------------------------ */
+/*  Device Info Detection                                              */
+/* ------------------------------------------------------------------ */
+
+const DeviceInfo = {
+    detect() {
+        const ua = navigator.userAgent;
+        const info = {};
+
+        const iosMatch = ua.match(/OS (\d+[_\.]\d+[_\.]?\d*)/);
+        if (iosMatch) {
+            info.iosVersion = iosMatch[1].replace(/_/g, '.');
+        }
+
+        info.screenResolution = `${screen.width}\u00d7${screen.height}`;
+        info.devicePixelRatio = window.devicePixelRatio || 1;
+        info.modelGuess = this._guessModel(screen.width, screen.height, window.devicePixelRatio);
+
+        return info;
+    },
+
+    _guessModel(w, h, dpr) {
+        const key = `${Math.min(w, h)}x${Math.max(w, h)}@${dpr}`;
+        const models = {
+            '393x852@3': 'iPhone 15 / 15 Pro / 16',
+            '430x932@3': 'iPhone 15 Plus / 15 Pro Max / 16 Plus',
+            '402x874@3': 'iPhone 16 Pro',
+            '440x956@3': 'iPhone 16 Pro Max',
+            '390x844@3': 'iPhone 14 / 13',
+            '428x926@3': 'iPhone 14 Plus / 13 Pro Max',
+            '375x812@3': 'iPhone 13 mini / 12 mini / X / XS',
+            '414x896@3': 'iPhone 11 Pro Max / XS Max',
+            '414x896@2': 'iPhone 11 / XR',
+            '375x667@2': 'iPhone SE (2nd/3rd gen) / 8',
+            '320x568@2': 'iPhone SE (1st gen)',
+        };
+        return models[key] || null;
+    },
+
+    validateIMEI(imei) {
+        if (imei.length !== 15 || !/^\d{15}$/.test(imei)) return false;
+        let sum = 0;
+        for (let i = 0; i < imei.length; i++) {
+            let d = parseInt(imei[i], 10);
+            if (i % 2 === 1) {
+                d *= 2;
+                if (d > 9) d -= 9;
+            }
+            sum += d;
+        }
+        return sum % 10 === 0;
+    },
+};
+
+/* ------------------------------------------------------------------ */
 /*  Test Definitions                                                   */
 /* ------------------------------------------------------------------ */
 
@@ -62,14 +116,14 @@ const TEST_DEFS = [
     {
         id: 'mic',
         name: 'Microphone',
-        description: 'A short audio clip will be recorded and played back.',
+        description: 'A short audio clip will be recorded. Speak or make noise to verify.',
         type: 'microphone',
         verification: 'tested',
     },
     {
         id: 'speaker',
         name: 'Speaker',
-        description: 'A test tone will play. Can you hear it?',
+        description: 'A test tone will play while the microphone listens to verify.',
         type: 'speaker',
         verification: 'tested',
     },
@@ -142,19 +196,96 @@ class TestRunner {
         this.tests = TEST_DEFS;
         this.results = {};
         this.currentIndex = 0;
-        this._stream = null;        // active MediaStream (camera / mic)
-        this._audioCtx = null;      // AudioContext for speaker test
-        this._recorder = null;      // MediaRecorder for mic test
+        this.phase = 'deviceInfo';
+        this.deviceInfo = {};
+        this.imei = null;
+        this._stream = null;
+        this._audioCtx = null;
+        this._micCtx = null;
+        this._recorder = null;
         this._recordedBlob = null;
-        this._motionHandler = null; // DeviceMotion listener
-        this._volumeAudio = null;   // Hidden <audio> for volume button detection
-        this._displayOverlay = null; // Full-screen color panel overlay
+        this._motionHandler = null;
+        this._volumeAudio = null;
+        this._displayOverlay = null;
+        this._visibilityHandler = null;
     }
 
     start() {
+        this.deviceInfo = DeviceInfo.detect();
+        this.phase = 'deviceInfo';
+        this._renderDeviceInfo();
+    }
+
+    _startTests() {
         this.currentIndex = 0;
         this.results = {};
+        this.phase = 'testing';
         this._renderTest();
+    }
+
+    /* --- Device Info Screen ---------------------------------------- */
+
+    _renderDeviceInfo() {
+        const info = this.deviceInfo;
+        let rows = '';
+        if (info.modelGuess) {
+            rows += `<div class="device-info-row"><span>Model (estimated)</span><span>${info.modelGuess}</span></div>`;
+        }
+        if (info.iosVersion) {
+            rows += `<div class="device-info-row"><span>iOS Version</span><span>${info.iosVersion}</span></div>`;
+        }
+        rows += `<div class="device-info-row"><span>Screen</span><span>${info.screenResolution} @${info.devicePixelRatio}x</span></div>`;
+
+        this.container.innerHTML = `
+            <div class="device-info-screen">
+                <div class="device-info-header">
+                    <div class="device-info-icon">\u24D8</div>
+                    <h2>Device Information</h2>
+                    <p class="device-info-desc">Enter your IMEI for the diagnostic report. This is optional but recommended for resale verification.</p>
+                </div>
+                <div class="device-info-card">${rows}</div>
+                <div class="imei-section">
+                    <label class="imei-label">IMEI</label>
+                    <input type="text" id="imeiInput" class="imei-input"
+                           placeholder="Enter or paste IMEI" inputmode="numeric"
+                           maxlength="15" autocomplete="off">
+                    <div class="imei-error hidden" id="imeiError">Invalid IMEI \u2014 must be 15 digits</div>
+                    <div class="imei-instructions">
+                        <div class="imei-instructions-title">How to find your IMEI:</div>
+                        <div>1. Go to <strong>Settings &gt; General &gt; About</strong></div>
+                        <div>2. Long-press the <strong>IMEI</strong> to copy it</div>
+                        <div>3. Come back here and paste</div>
+                    </div>
+                </div>
+                <div class="device-info-actions">
+                    <button class="btn btn-start" id="diContinueBtn">Continue</button>
+                    <button class="btn btn-skip" id="diSkipBtn">Skip</button>
+                </div>
+            </div>
+        `;
+
+        const imeiInput = this.container.querySelector('#imeiInput');
+        const imeiError = this.container.querySelector('#imeiError');
+
+        imeiInput.addEventListener('input', () => {
+            imeiInput.value = imeiInput.value.replace(/\D/g, '');
+            imeiError.classList.add('hidden');
+        });
+
+        this.container.querySelector('#diContinueBtn').addEventListener('click', () => {
+            const val = imeiInput.value.trim();
+            if (val && !DeviceInfo.validateIMEI(val)) {
+                imeiError.classList.remove('hidden');
+                return;
+            }
+            this.imei = val || null;
+            this._startTests();
+        });
+
+        this.container.querySelector('#diSkipBtn').addEventListener('click', () => {
+            this.imei = null;
+            this._startTests();
+        });
     }
 
     /* --- Rendering ------------------------------------------------ */
@@ -165,9 +296,18 @@ class TestRunner {
         if (!test) { this._renderResults(); return; }
 
         const pct = Math.round((this.currentIndex / this.tests.length) * 100);
+        const backDisabled = this.currentIndex === 0 ? 'disabled' : '';
+
         this.container.innerHTML = `
             <div class="test-header">
-                <div class="brand">ClearVue</div>
+                <div class="test-nav">
+                    <button class="nav-btn" id="navBack" ${backDisabled} aria-label="Go back">\u25C0</button>
+                    <span class="brand">ClearVue</span>
+                    <div class="nav-right">
+                        <button class="nav-btn" id="navRepeat" aria-label="Repeat test">\u21BB</button>
+                        <button class="nav-btn" id="navExit" aria-label="Exit">\u2715</button>
+                    </div>
+                </div>
                 <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
                 <div class="progress-text">Test ${this.currentIndex + 1} of ${this.tests.length}</div>
             </div>
@@ -178,6 +318,10 @@ class TestRunner {
             </div>
             <div class="test-actions" id="testActions"></div>
         `;
+
+        this.container.querySelector('#navBack').addEventListener('click', () => this._goBack());
+        this.container.querySelector('#navRepeat').addEventListener('click', () => this._repeatTest());
+        this.container.querySelector('#navExit').addEventListener('click', () => this._confirmExit());
 
         const content = this.container.querySelector('#testContent');
         const actions = this.container.querySelector('#testActions');
@@ -221,6 +365,45 @@ class TestRunner {
         this._renderTest();
     }
 
+    /* --- Navigation ----------------------------------------------- */
+
+    _goBack() {
+        if (this.currentIndex <= 0) return;
+        const prevTest = this.tests[this.currentIndex - 1];
+        delete this.results[prevTest.id];
+        this.currentIndex--;
+        this._renderTest();
+    }
+
+    _repeatTest() {
+        const test = this.tests[this.currentIndex];
+        if (test) delete this.results[test.id];
+        this._renderTest();
+    }
+
+    _confirmExit() {
+        const overlay = document.createElement('div');
+        overlay.className = 'exit-confirm-overlay';
+        overlay.innerHTML = `
+            <div class="exit-confirm-card">
+                <h3>Exit Diagnostic?</h3>
+                <p>Your test progress will be lost.</p>
+                <div class="exit-confirm-actions">
+                    <button class="btn btn-start" id="exitCancel">Continue Testing</button>
+                    <button class="btn btn-fail" id="exitConfirm">Exit</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+
+        overlay.querySelector('#exitCancel').addEventListener('click', () => overlay.remove());
+        overlay.querySelector('#exitConfirm').addEventListener('click', () => {
+            overlay.remove();
+            this._cleanup();
+            window.location.href = 'index.html';
+        });
+    }
+
     /* --- Manual Test ---------------------------------------------- */
 
     _setupManual(content, actions, test) {
@@ -262,7 +445,6 @@ class TestRunner {
         let touched = 0;
         const touchedSet = new Set();
 
-        // Create fullscreen overlay
         const overlay = document.createElement('div');
         overlay.className = 'touch-fullscreen';
         overlay.innerHTML = `
@@ -314,7 +496,6 @@ class TestRunner {
             this._record(test.id, 'fail');
         });
 
-        // Hide normal content/actions since we're fullscreen
         content.innerHTML = '<p style="color:#86868b">Touch test running fullscreen...</p>';
     }
 
@@ -322,14 +503,19 @@ class TestRunner {
 
     async _setupMicrophone(content, actions, test) {
         const RECORD_SECONDS = 3;
+        const AUTO_THRESHOLD = 0.03;
 
         content.innerHTML = `
             <div class="audio-status" id="audioStatus">Preparing...</div>
             <div class="audio-timer" id="audioTimer">${RECORD_SECONDS}.0</div>
+            <div class="audio-level-bar">
+                <div class="audio-level-fill" id="audioLevelFill"></div>
+            </div>
         `;
 
         const statusEl = this.container.querySelector('#audioStatus');
         const timerEl = this.container.querySelector('#audioTimer');
+        const levelFill = this.container.querySelector('#audioLevelFill');
 
         actions.innerHTML = '';
 
@@ -342,50 +528,47 @@ class TestRunner {
             return;
         }
 
-        statusEl.textContent = 'Recording...';
+        statusEl.textContent = 'Recording\u2026 speak or make noise';
         statusEl.className = 'audio-status recording';
-        const chunks = [];
-        this._recorder = new MediaRecorder(this._stream);
-        this._recorder.ondataavailable = (e) => { if (e.data.size > 0) chunks.push(e.data); };
 
-        this._recorder.onstop = () => {
-            this._recordedBlob = new Blob(chunks, { type: 'audio/webm' });
-            this._cleanup();
+        this._micCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const source = this._micCtx.createMediaStreamSource(this._stream);
+        const analyser = this._micCtx.createAnalyser();
+        analyser.fftSize = 256;
+        source.connect(analyser);
+        const dataArray = new Uint8Array(analyser.frequencyBinCount);
 
-            statusEl.textContent = 'Playing back...';
-            statusEl.className = 'audio-status playing';
-            const audio = new Audio(URL.createObjectURL(this._recordedBlob));
-
-            let playTime = 0;
-            const playInterval = setInterval(() => {
-                playTime += 0.1;
-                timerEl.textContent = playTime.toFixed(1);
-            }, 100);
-
-            audio.onended = () => {
-                clearInterval(playInterval);
-                statusEl.textContent = 'Did you hear the recording?';
-                statusEl.className = 'audio-status';
-                this._addButtons(actions, test.id);
-            };
-            audio.play().catch(() => {
-                clearInterval(playInterval);
-                statusEl.textContent = 'Playback failed. Could you hear anything?';
-                statusEl.className = 'audio-status';
-                this._addButtons(actions, test.id);
-            });
-        };
-
-        this._recorder.start();
+        let peakLevel = 0;
+        const levelInterval = setInterval(() => {
+            analyser.getByteTimeDomainData(dataArray);
+            let currentPeak = 0;
+            for (let i = 0; i < dataArray.length; i++) {
+                const amplitude = Math.abs(dataArray[i] - 128) / 128;
+                if (amplitude > currentPeak) currentPeak = amplitude;
+            }
+            if (currentPeak > peakLevel) peakLevel = currentPeak;
+            if (levelFill) {
+                levelFill.style.width = `${Math.min(currentPeak * 200, 100)}%`;
+            }
+        }, 50);
 
         let remaining = RECORD_SECONDS;
-        const interval = setInterval(() => {
+        const countdownInterval = setInterval(() => {
             remaining -= 0.1;
             if (remaining <= 0) {
-                clearInterval(interval);
+                clearInterval(countdownInterval);
+                clearInterval(levelInterval);
                 timerEl.textContent = '0.0';
-                if (this._recorder && this._recorder.state === 'recording') {
-                    this._recorder.stop();
+                this._cleanup();
+
+                if (peakLevel > AUTO_THRESHOLD) {
+                    statusEl.textContent = 'Microphone verified (audio detected)';
+                    statusEl.className = 'audio-status playing';
+                    setTimeout(() => this._record(test.id, 'pass'), 800);
+                } else {
+                    statusEl.textContent = 'No audio detected. Is the microphone working?';
+                    statusEl.className = 'audio-status';
+                    this._addButtons(actions, test.id);
                 }
             } else {
                 timerEl.textContent = remaining.toFixed(1);
@@ -397,6 +580,7 @@ class TestRunner {
 
     _setupSpeaker(content, actions, test) {
         const TONE_SECONDS = 2;
+        const AUTO_THRESHOLD = 0.05;
 
         content.innerHTML = `
             <div class="tone-indicator" id="toneIndicator">
@@ -410,11 +594,11 @@ class TestRunner {
 
         actions.innerHTML = `<button class="btn btn-start" id="playToneBtn">Play Test Tone</button>`;
 
-        const playBtn = this.container.querySelector('#playToneBtn');
-        playBtn.addEventListener('click', () => {
+        this.container.querySelector('#playToneBtn').addEventListener('click', async () => {
+            const playBtn = this.container.querySelector('#playToneBtn');
             playBtn.disabled = true;
             indicator.classList.add('active');
-            statusEl.textContent = 'Playing 1kHz tone...';
+            statusEl.textContent = 'Playing 1kHz tone\u2026';
 
             this._audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             const osc = this._audioCtx.createOscillator();
@@ -426,12 +610,55 @@ class TestRunner {
             gain.connect(this._audioCtx.destination);
             osc.start();
 
-            setTimeout(() => {
-                osc.stop();
-                indicator.classList.remove('active');
-                statusEl.textContent = 'Did you hear the tone?';
-                this._addButtons(actions, test.id);
-            }, TONE_SECONDS * 1000);
+            // Try to auto-validate by recording during playback
+            let autoValidated = false;
+            try {
+                const micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                this._micCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const source = this._micCtx.createMediaStreamSource(micStream);
+                const analyser = this._micCtx.createAnalyser();
+                analyser.fftSize = 256;
+                source.connect(analyser);
+                const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+                let peakLevel = 0;
+                const checkLevel = setInterval(() => {
+                    analyser.getByteTimeDomainData(dataArray);
+                    for (let i = 0; i < dataArray.length; i++) {
+                        const amplitude = Math.abs(dataArray[i] - 128) / 128;
+                        if (amplitude > peakLevel) peakLevel = amplitude;
+                    }
+                }, 100);
+
+                setTimeout(() => {
+                    clearInterval(checkLevel);
+                    osc.stop();
+                    micStream.getTracks().forEach(t => t.stop());
+                    if (this._micCtx) { this._micCtx.close().catch(() => {}); this._micCtx = null; }
+                    indicator.classList.remove('active');
+
+                    if (peakLevel > AUTO_THRESHOLD) {
+                        autoValidated = true;
+                        statusEl.textContent = 'Speaker verified (audio detected by mic)';
+                        statusEl.className = 'audio-status playing';
+                        setTimeout(() => this._record(test.id, 'pass'), 800);
+                    } else {
+                        statusEl.textContent = 'Did you hear the tone?';
+                        statusEl.className = 'audio-status';
+                        this._addButtons(actions, test.id);
+                    }
+                }, TONE_SECONDS * 1000);
+
+            } catch (err) {
+                // Mic not available — fall back to manual
+                setTimeout(() => {
+                    osc.stop();
+                    indicator.classList.remove('active');
+                    statusEl.textContent = 'Did you hear the tone?';
+                    statusEl.className = 'audio-status';
+                    this._addButtons(actions, test.id);
+                }, TONE_SECONDS * 1000);
+            }
         });
     }
 
@@ -542,7 +769,6 @@ class TestRunner {
             this._addButtons(actions, test.id);
 
         } else {
-            // Cellular: manual confirmation
             statusEl.textContent = 'Cellular Signal Check';
             const details = [];
 
@@ -643,7 +869,6 @@ class TestRunner {
         const dataEl = this.container.querySelector('#motionData');
         const dot = this.container.querySelector('#motionDot');
 
-        // iOS 13+ requires permission from a user gesture
         if (typeof DeviceMotionEvent !== 'undefined' &&
             typeof DeviceMotionEvent.requestPermission === 'function') {
             actions.innerHTML = `<button class="btn btn-start" id="motionPermBtn">Enable Motion Sensors</button>`;
@@ -664,7 +889,6 @@ class TestRunner {
                 }
             });
         } else {
-            // Non-iOS or permission not required
             this._startMotionListening(content, actions, test, statusEl, dataEl, dot);
         }
     }
@@ -752,7 +976,6 @@ class TestRunner {
             });
 
         } else if (typeof navigator.vibrate === 'function') {
-            // Non-Safari fallback (desktop testing)
             content.innerHTML = `<div class="connectivity-status">Testing vibration...</div>`;
             navigator.vibrate([200, 100, 200]);
             setTimeout(() => {
@@ -783,7 +1006,7 @@ class TestRunner {
         const steps = [
             { label: 'Volume Up', detect: 'volume' },
             { label: 'Volume Down', detect: 'volume' },
-            { label: 'Side Button (Power)', detect: 'manual' },
+            { label: 'Side Button (Power)', detect: 'sidebutton' },
         ];
         let stepIndex = 0;
         const stepResults = [];
@@ -823,7 +1046,7 @@ class TestRunner {
                     <div class="button-prompt-step">Button ${stepIndex + 1} of ${steps.length}</div>
                     <div class="button-prompt-label">Press: ${step.label}</div>
                     <div class="button-prompt-hint" id="buttonHint">
-                        ${step.detect === 'volume' ? 'Listening for volume change...' : 'Tap Confirm when done'}
+                        ${step.detect === 'volume' ? 'Listening for volume change...' : step.detect === 'sidebutton' ? 'Listening for screen lock...' : 'Tap Confirm when done'}
                     </div>
                 </div>
             `;
@@ -864,6 +1087,50 @@ class TestRunner {
                     renderStep();
                 });
 
+            } else if (step.detect === 'sidebutton') {
+                let detected = false;
+                let waitingForReturn = false;
+
+                const visHandler = () => {
+                    if (document.visibilityState === 'hidden' && !detected) {
+                        waitingForReturn = true;
+                    } else if (document.visibilityState === 'visible' && waitingForReturn) {
+                        detected = true;
+                        waitingForReturn = false;
+                        document.removeEventListener('visibilitychange', visHandler);
+                        this._visibilityHandler = null;
+                        const hint = this.container.querySelector('#buttonHint');
+                        if (hint) {
+                            hint.textContent = 'Side button detected!';
+                            hint.className = 'button-prompt-hint detected';
+                        }
+                        stepResults.push(true);
+                        setTimeout(() => { stepIndex++; renderStep(); }, 800);
+                    }
+                };
+
+                document.addEventListener('visibilitychange', visHandler);
+                this._visibilityHandler = visHandler;
+
+                actions.innerHTML = `
+                    <button class="btn btn-fail" data-action="fail">Didn't Work</button>
+                    <button class="btn btn-pass" data-action="confirm">Confirm Pressed</button>
+                `;
+                actions.querySelector('[data-action="fail"]').addEventListener('click', () => {
+                    document.removeEventListener('visibilitychange', visHandler);
+                    this._visibilityHandler = null;
+                    stepResults.push(false);
+                    stepIndex++;
+                    renderStep();
+                });
+                actions.querySelector('[data-action="confirm"]').addEventListener('click', () => {
+                    document.removeEventListener('visibilitychange', visHandler);
+                    this._visibilityHandler = null;
+                    stepResults.push(true);
+                    stepIndex++;
+                    renderStep();
+                });
+
             } else {
                 actions.innerHTML = `
                     <button class="btn btn-fail" data-action="fail">Didn't Work</button>
@@ -889,8 +1156,8 @@ class TestRunner {
 
     _renderResults() {
         this._cleanup();
+        this.phase = 'results';
         const now = new Date();
-        const iso = now.toISOString();
         const human = now.toLocaleString('en-US', {
             year: 'numeric', month: 'long', day: 'numeric',
             hour: 'numeric', minute: '2-digit', hour12: true,
@@ -901,6 +1168,21 @@ class TestRunner {
         const notTestable = Object.values(this.results).filter(r => r === 'not_testable').length;
         const scoreExtra = notTestable > 0 ? ` <span class="results-note">(${notTestable} not testable)</span>` : '';
 
+        // Device info card
+        const info = this.deviceInfo;
+        let deviceRows = '';
+        if (info.modelGuess) {
+            deviceRows += `<div class="device-info-row"><span>Model (est.)</span><span>${info.modelGuess}</span></div>`;
+        }
+        if (info.iosVersion) {
+            deviceRows += `<div class="device-info-row"><span>iOS</span><span>${info.iosVersion}</span></div>`;
+        }
+        deviceRows += `<div class="device-info-row"><span>Screen</span><span>${info.screenResolution} @${info.devicePixelRatio}x</span></div>`;
+        if (this.imei) {
+            deviceRows += `<div class="device-info-row"><span>IMEI</span><span class="mono">${this.imei}</span></div>`;
+        }
+
+        // Test results list
         let listHTML = '';
         for (const test of this.tests) {
             const result = this.results[test.id] || 'skipped';
@@ -932,11 +1214,11 @@ class TestRunner {
                     <h2>Diagnostic Complete</h2>
                     <div class="results-score">${passed} / ${tested} tests passed${scoreExtra}</div>
                     <div class="results-timestamp">${human}</div>
-                    <div class="results-timestamp">${iso}</div>
                 </div>
+                <div class="results-device-card">${deviceRows}</div>
                 <div class="app-promo">
                     <div class="app-promo-badge">iOS App</div>
-                    <div class="app-promo-text">Get the full ClearVue experience &mdash; Bluetooth, NFC, Face ID, and 3 more tests verified automatically.</div>
+                    <div class="app-promo-text">Get the full ClearVue experience &mdash; Bluetooth, Face ID, and more verified with native hardware access.</div>
                     <div class="app-promo-note">Coming soon to the App Store</div>
                 </div>
                 <ul class="results-list">${listHTML}</ul>
@@ -947,10 +1229,12 @@ class TestRunner {
             </div>
         `;
 
-        this.container.querySelector('#restartBtn').addEventListener('click', () => this.start());
+        this.container.querySelector('#restartBtn').addEventListener('click', () => {
+            this._startTests();
+        });
 
         this.container.dispatchEvent(new CustomEvent('testscomplete', {
-            detail: { results: { ...this.results }, timestamp: iso, tests: this.tests },
+            detail: { results: { ...this.results }, timestamp: now.toISOString(), tests: this.tests },
         }));
     }
 
@@ -964,6 +1248,10 @@ class TestRunner {
         if (this._audioCtx) {
             this._audioCtx.close().catch(() => {});
             this._audioCtx = null;
+        }
+        if (this._micCtx) {
+            this._micCtx.close().catch(() => {});
+            this._micCtx = null;
         }
         if (this._recorder && this._recorder.state === 'recording') {
             this._recorder.stop();
@@ -981,6 +1269,10 @@ class TestRunner {
         if (this._displayOverlay) {
             this._displayOverlay.remove();
             this._displayOverlay = null;
+        }
+        if (this._visibilityHandler) {
+            document.removeEventListener('visibilitychange', this._visibilityHandler);
+            this._visibilityHandler = null;
         }
     }
 }

@@ -12,6 +12,7 @@ class TestRunner: ObservableObject {
     @Published var phase: AppPhase = .intro
     @Published var currentIndex: Int = 0
     @Published var results: [TestID: TestResult] = [:]
+    @Published var testKey: UUID = UUID()
     @Published var imei: String?
 
     let tests = TestDefinition.allTests
@@ -27,6 +28,10 @@ class TestRunner: ObservableObject {
         return Double(currentIndex) / Double(tests.count)
     }
 
+    var canGoBack: Bool {
+        currentIndex > 0
+    }
+
     func showDeviceInfo() {
         phase = .deviceInfo
     }
@@ -35,6 +40,7 @@ class TestRunner: ObservableObject {
         currentIndex = 0
         results = [:]
         startTime = Date()
+        testKey = UUID()
         phase = .testing
     }
 
@@ -48,6 +54,7 @@ class TestRunner: ObservableObject {
             timestamp: Date()
         )
         currentIndex += 1
+        testKey = UUID()
         if currentIndex >= tests.count {
             phase = .results
         }
@@ -55,6 +62,27 @@ class TestRunner: ObservableObject {
 
     func restart() {
         start()
+    }
+
+    func goBack() {
+        guard canGoBack else { return }
+        let previousTest = tests[currentIndex - 1]
+        results.removeValue(forKey: previousTest.id)
+        currentIndex -= 1
+        testKey = UUID()
+    }
+
+    func repeatTest() {
+        if let test = currentTest {
+            results.removeValue(forKey: test.id)
+        }
+        testKey = UUID()
+    }
+
+    func exitTests() {
+        phase = .intro
+        currentIndex = 0
+        results = [:]
     }
 
     func buildReport() -> DiagnosticReport {

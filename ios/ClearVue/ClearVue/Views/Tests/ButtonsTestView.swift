@@ -7,17 +7,18 @@ struct ButtonsTestView: View {
     let onComplete: (TestStatus, String?) -> Void
 
     @State private var currentStep = 0
-    @State private var stepResults: [Bool?] = [nil, nil, nil, nil]
+    @State private var stepResults: [Bool?] = [nil, nil, nil]
     @State private var volumeObservation: NSKeyValueObservation?
     @State private var initialVolume: Float = 0
     @State private var volumeDetected = false
     @State private var showingSummary = false
+    @State private var lockDetected = false
+    @State private var waitingForLock = false
 
     private let steps = [
         ("Volume Up", "Press the Volume Up button"),
         ("Volume Down", "Press the Volume Down button"),
         ("Side Button", "Press and release the Side button (power)"),
-        ("Mute Switch", "Toggle the Mute switch on the side"),
     ]
 
     var body: some View {
@@ -54,6 +55,7 @@ struct ButtonsTestView: View {
         }
         .onAppear {
             setupVolumeObservation()
+            setupLockDetection()
         }
         .onDisappear {
             volumeObservation?.invalidate()
@@ -83,8 +85,14 @@ struct ButtonsTestView: View {
                     .foregroundColor(Theme.pass)
             }
 
-            // For volume steps (0, 1): auto-detect; for side/mute (2, 3): manual
-            if currentStep >= 2 || (currentStep < 2 && !volumeDetected) {
+            if lockDetected && currentStep == 2 {
+                Text("Detected!")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundColor(Theme.pass)
+            }
+
+            // Manual fallback when auto-detect hasn't fired
+            if !volumeDetected && !lockDetected {
                 HStack(spacing: 12) {
                     Button(action: { recordStep(passed: false) }) {
                         Text("Didn't Work")
@@ -158,6 +166,23 @@ struct ButtonsTestView: View {
                         }
                     }
                     self.initialVolume = newVolume
+                }
+            }
+        }
+    }
+
+    private func setupLockDetection() {
+        NotificationCenter.default.addObserver(forName: UIApplication.willResignActiveNotification, object: nil, queue: .main) { _ in
+            if currentStep == 2 && !lockDetected {
+                waitingForLock = true
+            }
+        }
+        NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) { _ in
+            if waitingForLock {
+                waitingForLock = false
+                lockDetected = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    recordStep(passed: true)
                 }
             }
         }

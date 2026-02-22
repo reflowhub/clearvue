@@ -1,21 +1,26 @@
 import AVFoundation
 import Combine
 
-enum AudioState {
+enum AudioState: Equatable {
     case idle
     case recording(TimeInterval)
     case playing
     case done
     case error(String)
+
+    var isDone: Bool { if case .done = self { return true } else { return false } }
 }
 
 class AudioService: NSObject, ObservableObject {
     @Published var state: AudioState = .idle
+    private(set) var peakRecordingLevel: Float = -160
 
     private var recorder: AVAudioRecorder?
     private var player: AVAudioPlayer?
     private var timer: Timer?
     private var recordDuration: TimeInterval = 3.0
+
+    var recordingDetected: Bool { peakRecordingLevel > -50 }
 
     private var recordingURL: URL {
         FileManager.default.temporaryDirectory.appendingPathComponent("clearvue_mic_test.m4a")
@@ -48,7 +53,9 @@ class AudioService: NSObject, ObservableObject {
             ]
 
             recorder = try AVAudioRecorder(url: recordingURL, settings: settings)
+            recorder?.isMeteringEnabled = true
             recorder?.record()
+            peakRecordingLevel = -160
 
             var elapsed: TimeInterval = 0
             state = .recording(recordDuration)
@@ -56,6 +63,10 @@ class AudioService: NSObject, ObservableObject {
             timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] t in
                 guard let self else { t.invalidate(); return }
                 elapsed += 0.1
+                self.recorder?.updateMeters()
+                if let level = self.recorder?.peakPower(forChannel: 0) {
+                    self.peakRecordingLevel = max(self.peakRecordingLevel, level)
+                }
                 let remaining = max(0, self.recordDuration - elapsed)
                 self.state = .recording(remaining)
                 if elapsed >= self.recordDuration {

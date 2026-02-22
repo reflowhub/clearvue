@@ -30,21 +30,6 @@ const TEST_DEFS = [
         colors: ['#ffffff', '#ff0000', '#00ff00', '#0000ff', '#000000'],
         colorNames: ['White', 'Red', 'Green', 'Blue', 'Black'],
     },
-    {
-        id: 'truetone',
-        name: 'True Tone',
-        description: 'Go to Settings \u203a Display & Brightness. Toggle True Tone on and off. Does the screen tint shift between warm and cool?',
-        type: 'manual',
-        verification: 'self-reported',
-        extraButtons: ['not_supported'],
-    },
-    {
-        id: 'proximity',
-        name: 'Proximity Sensor',
-        description: 'Make a phone call (or call voicemail). Cover the top of the screen with your hand. The screen should turn off.',
-        type: 'manual',
-        verification: 'self-reported',
-    },
 
     // --- Cameras ---
     {
@@ -144,14 +129,6 @@ const TEST_DEFS = [
         description: 'Test each physical button when prompted.',
         type: 'buttons',
         verification: 'self-reported',
-    },
-    {
-        id: 'nfc',
-        name: 'NFC',
-        description: 'Not available in browser. This test runs in the ClearVue iOS app.',
-        type: 'unsupported',
-        verification: 'untestable',
-        reason: 'NFC testing requires native hardware access. Available in the ClearVue iOS app.',
     },
 ];
 
@@ -807,7 +784,6 @@ class TestRunner {
             { label: 'Volume Up', detect: 'volume' },
             { label: 'Volume Down', detect: 'volume' },
             { label: 'Side Button (Power)', detect: 'manual' },
-            { label: 'Mute Switch', detect: 'manual' },
         ];
         let stepIndex = 0;
         const stepResults = [];

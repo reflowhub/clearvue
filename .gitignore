@@ -10,3 +10,4 @@ ios/ClearVue/ClearVue.xcodeproj/project.xcworkspace/xcuserdata/
 *.xcuserstate
 DerivedData/
 build/
+node_modules/

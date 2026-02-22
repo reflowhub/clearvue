@@ -5,7 +5,6 @@ struct MicrophoneTestView: View {
     let onComplete: (TestStatus, String?) -> Void
 
     @StateObject private var audioService = AudioService()
-    @State private var hasStarted = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -28,14 +27,31 @@ struct MicrophoneTestView: View {
 
             Spacer()
 
-            TestActionButtons(
-                onPass: { onComplete(.pass, "Microphone recording and playback successful") },
-                onFail: { onComplete(.fail, nil) },
-                onSkip: { onComplete(.skipped, nil) }
-            )
+            if case .error = audioService.state {
+                TestActionButtons(
+                    onPass: { onComplete(.pass, nil) },
+                    onFail: { onComplete(.fail, "Microphone error") },
+                    onSkip: { onComplete(.skipped, nil) }
+                )
+            } else if case .idle = audioService.state {
+                TestActionButtons(
+                    onPass: { onComplete(.pass, nil) },
+                    onFail: { onComplete(.fail, nil) },
+                    onSkip: { onComplete(.skipped, nil) }
+                )
+            }
         }
         .onDisappear {
             audioService.cleanup()
+        }
+        .onChange(of: audioService.state.isDone) { done in
+            guard done else { return }
+            let passed = audioService.recordingDetected
+            let peak = String(format: "%.1f", audioService.peakRecordingLevel)
+            onComplete(
+                passed ? .pass : .fail,
+                passed ? "Audio detected (peak: \(peak) dB)" : "No audio detected (peak: \(peak) dB)"
+            )
         }
     }
 
@@ -44,7 +60,6 @@ struct MicrophoneTestView: View {
         switch audioService.state {
         case .idle:
             Button(action: {
-                hasStarted = true
                 audioService.startRecording()
             }) {
                 HStack(spacing: 8) {
@@ -81,10 +96,14 @@ struct MicrophoneTestView: View {
             }
 
         case .done:
-            Text("Playback complete. Could you hear the recording?")
-                .font(.body)
-                .foregroundColor(Theme.textSecondary)
-                .multilineTextAlignment(.center)
+            VStack(spacing: 8) {
+                Image(systemName: audioService.recordingDetected ? "checkmark.circle.fill" : "xmark.circle.fill")
+                    .font(.system(size: 48))
+                    .foregroundColor(audioService.recordingDetected ? Theme.pass : Theme.fail)
+                Text(audioService.recordingDetected ? "Microphone working" : "No audio detected")
+                    .font(.title3.weight(.semibold))
+                    .foregroundColor(audioService.recordingDetected ? Theme.pass : Theme.fail)
+            }
 
         case .error(let msg):
             Text(msg)

@@ -3,8 +3,6 @@ import Foundation
 enum TestID: String, CaseIterable, Codable {
     case faceID = "faceid"
     case display = "display"
-    case trueTone = "truetone"
-    case proximity = "proximity"
     case frontCamera = "front_cam"
     case rearCamera = "rear_cam"
     case touchScreen = "touch"
@@ -17,7 +15,6 @@ enum TestID: String, CaseIterable, Codable {
     case accelerometerGyroscope = "accel_gyro"
     case vibration = "vibration"
     case buttons = "buttons"
-    case nfc = "nfc"
 }
 
 enum VerificationType: String, Codable {
@@ -29,7 +26,6 @@ enum VerificationType: String, Codable {
 enum TestType {
     case biometric
     case display
-    case manual
     case camera(position: CameraPosition)
     case touch
     case microphone
@@ -40,7 +36,6 @@ enum TestType {
     case motion
     case vibration
     case buttons
-    case nfc
 }
 
 enum CameraPosition {
@@ -57,16 +52,6 @@ struct TestDefinition: Identifiable {
     let description: String
     let type: TestType
     let verification: VerificationType
-    let showNotSupported: Bool
-
-    init(id: TestID, name: String, description: String, type: TestType, verification: VerificationType, showNotSupported: Bool = false) {
-        self.id = id
-        self.name = name
-        self.description = description
-        self.type = type
-        self.verification = verification
-        self.showNotSupported = showNotSupported
-    }
 
     static let allTests: [TestDefinition] = [
         TestDefinition(
@@ -82,21 +67,6 @@ struct TestDefinition: Identifiable {
             description: "Full-screen color panels will appear. Check each for dead pixels, discoloration, or backlight bleed. Tap to advance.",
             type: .display,
             verification: .selfReported
-        ),
-        TestDefinition(
-            id: .trueTone,
-            name: "True Tone",
-            description: "Go to Settings \u{2192} Display & Brightness. Toggle True Tone on and off. Does the screen tint shift?",
-            type: .manual,
-            verification: .selfReported,
-            showNotSupported: true
-        ),
-        TestDefinition(
-            id: .proximity,
-            name: "Proximity Sensor",
-            description: "Cover the top of the screen with your hand. The screen should turn off.",
-            type: .manual,
-            verification: .tested
         ),
         TestDefinition(
             id: .frontCamera,
@@ -181,13 +151,6 @@ struct TestDefinition: Identifiable {
             description: "Test each physical button when prompted.",
             type: .buttons,
             verification: .selfReported
-        ),
-        TestDefinition(
-            id: .nfc,
-            name: "NFC",
-            description: "Scan any NFC tag to verify the NFC reader.",
-            type: .nfc,
-            verification: .tested
         ),
     ]
 }

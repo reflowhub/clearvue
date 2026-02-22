@@ -16,7 +16,5 @@
 	<string>ClearVue needs location access to verify GPS hardware.</string>
 	<key>NSMotionUsageDescription</key>
 	<string>ClearVue needs motion sensor access to test the accelerometer and gyroscope.</string>
-	<key>NFCReaderUsageDescription</key>
-	<string>ClearVue needs NFC access to verify the NFC reader hardware.</string>
 </dict>
 </plist>

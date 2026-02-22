@@ -5,9 +5,10 @@ struct SpeakerTestView: View {
     let test: TestDefinition
     let onComplete: (TestStatus, String?) -> Void
 
-    @State private var isPlaying = false
-    @State private var hasPlayed = false
+    @State private var phase: SpeakerPhase = .idle
     @State private var engine: AVAudioEngine?
+    @State private var recorder: AVAudioRecorder?
+    @State private var peakLevel: Float = -160
 
     var body: some View {
         VStack(spacing: 0) {
@@ -18,30 +19,23 @@ struct SpeakerTestView: View {
                     .font(.title2.weight(.bold))
                     .foregroundColor(Theme.textPrimary)
 
-                Text(test.description)
+                Text(statusDescription)
                     .font(.body)
                     .foregroundColor(Theme.textSecondary)
                     .multilineTextAlignment(.center)
                     .frame(maxWidth: 320)
 
-                // Tone indicator circle
                 Circle()
-                    .fill(isPlaying ? Theme.pass : Theme.surface)
+                    .fill(phase == .playing ? Theme.pass : Theme.surface)
                     .frame(width: 96, height: 96)
-                    .shadow(color: isPlaying ? Theme.pass.opacity(0.3) : .clear, radius: 20)
+                    .shadow(color: phase == .playing ? Theme.pass.opacity(0.3) : .clear, radius: 20)
                     .overlay {
-                        Image(systemName: "speaker.wave.2.fill")
-                            .font(.system(size: 32))
-                            .foregroundColor(isPlaying ? Color(hex: 0x0A0A0A) : Theme.textMuted)
+                        resultOverlay
                     }
-                    .animation(.easeInOut(duration: 0.2), value: isPlaying)
+                    .animation(.easeInOut(duration: 0.2), value: phase)
 
-                if hasPlayed {
-                    Text("Could you hear the test tone?")
-                        .font(.body)
-                        .foregroundColor(Theme.textSecondary)
-                } else if !isPlaying {
-                    Button(action: playTone) {
+                if case .idle = phase {
+                    Button(action: playAndRecord) {
                         HStack(spacing: 8) {
                             Image(systemName: "play.fill")
                             Text("Play Test Tone")
@@ -59,23 +53,88 @@ struct SpeakerTestView: View {
 
             Spacer()
 
-            TestActionButtons(
-                onPass: { onComplete(.pass, "Speaker tone audible") },
-                onFail: { onComplete(.fail, nil) },
-                onSkip: { onComplete(.skipped, nil) }
-            )
+            if case .error = phase {
+                TestActionButtons(
+                    onPass: { onComplete(.pass, "Speaker tone audible") },
+                    onFail: { onComplete(.fail, nil) },
+                    onSkip: { onComplete(.skipped, nil) }
+                )
+            }
         }
         .onDisappear {
             engine?.stop()
+            recorder?.stop()
         }
     }
 
-    private func playTone() {
+    private var statusDescription: String {
+        switch phase {
+        case .idle:
+            return test.description
+        case .playing:
+            return "Playing tone and listening..."
+        case .pass:
+            return String(format: "Speaker verified — tone detected (peak: %.1f dB).", peakLevel)
+        case .fail:
+            return String(format: "No tone detected by microphone (peak: %.1f dB).", peakLevel)
+        case .error(let msg):
+            return msg
+        }
+    }
+
+    @ViewBuilder
+    private var resultOverlay: some View {
+        switch phase {
+        case .pass:
+            Image(systemName: "checkmark.circle.fill")
+                .font(.system(size: 40))
+                .foregroundColor(Theme.pass)
+        case .fail:
+            Image(systemName: "xmark.circle.fill")
+                .font(.system(size: 40))
+                .foregroundColor(Theme.fail)
+        default:
+            Image(systemName: "speaker.wave.2.fill")
+                .font(.system(size: 32))
+                .foregroundColor(phase == .playing ? Color(hex: 0x0A0A0A) : Theme.textMuted)
+        }
+    }
+
+    private var recordingURL: URL {
+        FileManager.default.temporaryDirectory.appendingPathComponent("clearvue_speaker_test.m4a")
+    }
+
+    private func playAndRecord() {
+        AVAudioSession.sharedInstance().requestRecordPermission { granted in
+            DispatchQueue.main.async {
+                if granted {
+                    startPlayAndRecord()
+                } else {
+                    phase = .error("Microphone access denied. Cannot auto-verify speaker.")
+                }
+            }
+        }
+    }
+
+    private func startPlayAndRecord() {
         do {
             let session = AVAudioSession.sharedInstance()
-            try session.setCategory(.playback, mode: .default)
+            try session.setCategory(.playAndRecord, options: .defaultToSpeaker)
             try session.setActive(true)
 
+            // Start recording
+            let settings: [String: Any] = [
+                AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
+                AVSampleRateKey: 44100,
+                AVNumberOfChannelsKey: 1,
+                AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue,
+            ]
+            let rec = try AVAudioRecorder(url: recordingURL, settings: settings)
+            rec.isMeteringEnabled = true
+            rec.record()
+            recorder = rec
+
+            // Play tone
             let audioEngine = AVAudioEngine()
             let playerNode = AVAudioPlayerNode()
             audioEngine.attach(playerNode)
@@ -97,18 +156,44 @@ struct SpeakerTestView: View {
 
             try audioEngine.start()
             playerNode.play()
-            playerNode.scheduleBuffer(buffer) { [self] in
+            playerNode.scheduleBuffer(buffer) {
                 DispatchQueue.main.async {
-                    self.isPlaying = false
-                    self.hasPlayed = true
+                    finishTest()
                 }
             }
 
             engine = audioEngine
-            isPlaying = true
+            phase = .playing
+
+            // Poll meter during playback
+            peakLevel = -160
+            Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { t in
+                guard case .playing = phase else { t.invalidate(); return }
+                rec.updateMeters()
+                let level = rec.peakPower(forChannel: 0)
+                peakLevel = max(peakLevel, level)
+            }
         } catch {
-            // Fallback: just mark as playable
-            hasPlayed = true
+            phase = .error("Audio error: \(error.localizedDescription)")
         }
     }
+
+    private func finishTest() {
+        recorder?.stop()
+        engine?.stop()
+        try? FileManager.default.removeItem(at: recordingURL)
+
+        let passed = peakLevel > -40
+        phase = passed ? .pass : .fail
+        let detail = String(format: passed ? "Speaker tone detected (peak: %.1f dB)" : "No speaker tone detected (peak: %.1f dB)", peakLevel)
+        onComplete(passed ? .pass : .fail, detail)
+    }
+}
+
+private enum SpeakerPhase: Equatable {
+    case idle
+    case playing
+    case pass
+    case fail
+    case error(String)
 }

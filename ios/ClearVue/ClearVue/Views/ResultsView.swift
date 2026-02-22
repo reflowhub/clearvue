@@ -64,8 +64,10 @@ struct ResultsView: View {
                             Label(storage, systemImage: "internaldrive")
                         }
                         Spacer()
-                        if let battery = report.batteryLevel {
-                            Label("\(battery)%", systemImage: "battery.100percent")
+                        if let health = report.batteryHealth {
+                            Label("\(health)%", systemImage: "battery.100percent")
+                        } else if let charge = report.batteryLevel {
+                            Label("\(charge)%", systemImage: "battery.100percent")
                         }
                     }
                 }

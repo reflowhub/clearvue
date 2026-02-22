@@ -245,6 +245,8 @@
 				TargetAttributes = {
 					A1T00001 = {
 						CreatedOnToolsVersion = 15.4;
+						DevelopmentTeam = 5KY54CZC83;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -454,6 +456,7 @@
 				CODE_SIGN_ENTITLEMENTS = ClearVue/ClearVue.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5KY54CZC83;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ClearVue/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ClearVue;
@@ -467,8 +470,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = app.rhex.clearvue;
+				MARKETING_VERSION = 2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.joinreflow.clearvue;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -486,6 +489,7 @@
 				CODE_SIGN_ENTITLEMENTS = ClearVue/ClearVue.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5KY54CZC83;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ClearVue/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ClearVue;
@@ -499,8 +503,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = app.rhex.clearvue;
+				MARKETING_VERSION = 2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.joinreflow.clearvue;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;

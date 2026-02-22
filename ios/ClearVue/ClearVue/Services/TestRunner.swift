@@ -69,6 +69,7 @@ class TestRunner: ObservableObject {
             imei: imei,
             storageTotal: DiagnosticReport.currentStorageTotal,
             storageAvailable: DiagnosticReport.currentStorageAvailable,
+            batteryHealth: DiagnosticReport.currentBatteryHealth,
             batteryLevel: DiagnosticReport.currentBatteryLevel
         )
     }

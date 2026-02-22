@@ -1,4 +1,5 @@
 import UIKit
+import IOKit
 
 struct DiagnosticReport: Codable {
     let id: String
@@ -10,6 +11,7 @@ struct DiagnosticReport: Codable {
     let imei: String?
     let storageTotal: Int64?
     let storageAvailable: Int64?
+    let batteryHealth: Int?
     let batteryLevel: Int?
 
     var passCount: Int { results.filter { $0.status == .pass }.count }
@@ -47,6 +49,27 @@ struct DiagnosticReport: Codable {
         guard let values = try? url.resourceValues(forKeys: [.volumeAvailableCapacityForImportantUsageKey]),
               let avail = values.volumeAvailableCapacityForImportantUsage else { return nil }
         return avail
+    }
+
+    static var currentBatteryHealth: Int? {
+        let service = IOServiceGetMatchingService(kIOMainPortDefault,
+            IOServiceMatching("IOPMPowerSource"))
+        guard service != IO_OBJECT_NULL else { return nil }
+        defer { IOObjectRelease(service) }
+
+        var cfProps: Unmanaged<CFMutableDictionary>?
+        guard IORegistryEntryCreateCFProperties(service, &cfProps,
+            kCFAllocatorDefault, 0) == KERN_SUCCESS,
+              let props = cfProps?.takeRetainedValue() as? [String: Any] else {
+            return nil
+        }
+
+        if let rawMax = props["AppleRawMaxCapacity"] as? Int,
+           let design = props["DesignCapacity"] as? Int,
+           design > 0 {
+            return min(100, Int(round(Double(rawMax) / Double(design) * 100)))
+        }
+        return nil
     }
 
     static var currentBatteryLevel: Int? {

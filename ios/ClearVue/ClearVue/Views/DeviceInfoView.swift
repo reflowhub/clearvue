@@ -44,8 +44,10 @@ struct DeviceInfoView: View {
                         DeviceInfoRow(label: "Storage", value: "\(roundedGB) GB")
                     }
 
-                    if let battery = DiagnosticReport.currentBatteryLevel {
-                        DeviceInfoRow(label: "Battery", value: "\(battery)%")
+                    if let health = DiagnosticReport.currentBatteryHealth {
+                        DeviceInfoRow(label: "Battery", value: "\(health)%")
+                    } else if let charge = DiagnosticReport.currentBatteryLevel {
+                        DeviceInfoRow(label: "Charge", value: "\(charge)%")
                     }
                 }
                 .padding(16)

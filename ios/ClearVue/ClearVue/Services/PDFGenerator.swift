@@ -49,8 +49,11 @@ class PDFGenerator {
                 "Storage: \(storage)".draw(at: CGPoint(x: margin, y: y), withAttributes: metaAttrs)
                 y += 16
             }
-            if let battery = report.batteryLevel {
-                "Battery: \(battery)%".draw(at: CGPoint(x: margin, y: y), withAttributes: metaAttrs)
+            if let health = report.batteryHealth {
+                "Battery Health: \(health)%".draw(at: CGPoint(x: margin, y: y), withAttributes: metaAttrs)
+                y += 16
+            } else if let charge = report.batteryLevel {
+                "Battery Charge: \(charge)%".draw(at: CGPoint(x: margin, y: y), withAttributes: metaAttrs)
                 y += 16
             }
             y += 14

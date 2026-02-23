@@ -1,5 +1,4 @@
 import UIKit
-import IOKit
 
 struct DiagnosticReport: Codable {
     let id: String
@@ -52,23 +51,8 @@ struct DiagnosticReport: Codable {
     }
 
     static var currentBatteryHealth: Int? {
-        let service = IOServiceGetMatchingService(kIOMainPortDefault,
-            IOServiceMatching("IOPMPowerSource"))
-        guard service != IO_OBJECT_NULL else { return nil }
-        defer { IOObjectRelease(service) }
-
-        var cfProps: Unmanaged<CFMutableDictionary>?
-        guard IORegistryEntryCreateCFProperties(service, &cfProps,
-            kCFAllocatorDefault, 0) == KERN_SUCCESS,
-              let props = cfProps?.takeRetainedValue() as? [String: Any] else {
-            return nil
-        }
-
-        if let rawMax = props["AppleRawMaxCapacity"] as? Int,
-           let design = props["DesignCapacity"] as? Int,
-           design > 0 {
-            return min(100, Int(round(Double(rawMax) / Double(design) * 100)))
-        }
+        // Battery health (max capacity %) is not exposed via any public iOS API.
+        // It requires IOKit private APIs which would be rejected by App Review.
         return nil
     }
 

@@ -68,6 +68,24 @@
             word-break: break-all;
             margin-bottom: 2.5rem;
         }
+        .gate-appstore {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: #f5f5f7;
+            background: #0071e3;
+            border-radius: 980px;
+            text-decoration: none;
+            transition: opacity 0.2s;
+            margin-bottom: 0.75rem;
+        }
+        .gate-appstore:hover { opacity: 0.85; }
+        .gate-or {
+            font-size: 0.75rem;
+            color: #48484a;
+            margin-bottom: 0.75rem;
+        }
         .gate-demo-btn {
             display: inline-block;
             padding: 0.75rem 1.5rem;
@@ -108,6 +126,8 @@
                 <img src="${qrSrc}" alt="QR code to open on iPhone" width="200" height="200">
             </div>
             <p class="gate-url">${pageUrl}</p>
+            <a class="gate-appstore" href="https://apps.apple.com/app/clearvue-app/id6443946885" target="_blank" rel="noopener noreferrer">Download on App Store</a>
+            <p class="gate-or">or</p>
             <button class="gate-demo-btn" id="gateDemoBtn">Continue in demo mode</button>
             <p class="gate-demo-note">Results will be labelled "Demo — non-iPhone device"</p>
         </div>

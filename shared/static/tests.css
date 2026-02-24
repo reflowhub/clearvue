@@ -756,6 +756,25 @@ body {
     margin-bottom: 0.25rem;
 }
 
+.imei-desc {
+    font-size: 0.8125rem;
+    color: #86868b;
+    margin-bottom: 0.75rem;
+}
+
+.results-imei {
+    background: #1d1d1f;
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.btn-sm {
+    margin-top: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+}
+
 .device-info-actions {
     width: 100%;
     max-width: 24rem;

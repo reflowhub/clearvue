@@ -46,7 +46,7 @@ struct IntroView: View {
             Spacer()
 
             VStack(spacing: 16) {
-                FeatureRow(icon: "17", title: "Functional Tests", subtitle: "Camera, touch, audio, sensors, connectivity and more")
+                FeatureRow(icon: "13", title: "Functional Tests", subtitle: "Camera, touch, audio, sensors, connectivity and more")
                 FeatureRow(icon: "PDF", title: "Downloadable Report", subtitle: "Timestamped results you can share with buyers")
                 FeatureRow(icon: "0", title: "Data Sent Nowhere", subtitle: "All tests run locally on your device")
             }
@@ -69,7 +69,7 @@ private struct FeatureRow: View {
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
             Text(icon)
-                .font(.title2)
+                .font(.subheadline.weight(.bold))
                 .frame(width: 32, alignment: .center)
 
             VStack(alignment: .leading, spacing: 2) {

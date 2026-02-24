@@ -234,48 +234,16 @@ class TestRunner {
                 <div class="device-info-header">
                     <div class="device-info-icon">\u24D8</div>
                     <h2>Device Information</h2>
-                    <p class="device-info-desc">Enter your IMEI for the diagnostic report. This is optional but recommended for resale verification.</p>
+                    <p class="device-info-desc">Auto-detected device details for your diagnostic report.</p>
                 </div>
                 <div class="device-info-card">${rows}</div>
-                <div class="imei-section">
-                    <label class="imei-label">IMEI</label>
-                    <input type="text" id="imeiInput" class="imei-input"
-                           placeholder="Enter or paste IMEI" inputmode="numeric"
-                           maxlength="15" autocomplete="off">
-                    <div class="imei-error hidden" id="imeiError">Invalid IMEI \u2014 must be 15 digits</div>
-                    <div class="imei-instructions">
-                        <div class="imei-instructions-title">How to find your IMEI:</div>
-                        <div>1. Go to <strong>Settings &gt; General &gt; About</strong></div>
-                        <div>2. Long-press the <strong>IMEI</strong> to copy it</div>
-                        <div>3. Come back here and paste</div>
-                    </div>
-                </div>
                 <div class="device-info-actions">
-                    <button class="btn btn-start" id="diContinueBtn">Continue</button>
-                    <button class="btn btn-skip" id="diSkipBtn">Skip</button>
+                    <button class="btn btn-start" id="diContinueBtn">Start Tests</button>
                 </div>
             </div>
         `;
 
-        const imeiInput = this.container.querySelector('#imeiInput');
-        const imeiError = this.container.querySelector('#imeiError');
-
-        imeiInput.addEventListener('input', () => {
-            imeiInput.value = imeiInput.value.replace(/\D/g, '');
-            imeiError.classList.add('hidden');
-        });
-
         this.container.querySelector('#diContinueBtn').addEventListener('click', () => {
-            const val = imeiInput.value.trim();
-            if (val && !DeviceInfo.validateIMEI(val)) {
-                imeiError.classList.remove('hidden');
-                return;
-            }
-            this.imei = val || null;
-            this._startTests();
-        });
-
-        this.container.querySelector('#diSkipBtn').addEventListener('click', () => {
             this.imei = null;
             this._startTests();
         });
@@ -1165,6 +1133,21 @@ class TestRunner {
                     <div class="app-promo-note">Coming soon to the App Store</div>
                 </div>
                 <ul class="results-list">${listHTML}</ul>
+                <div class="imei-section results-imei" id="imeiSection">
+                    <label class="imei-label">IMEI Required</label>
+                    <p class="imei-desc">Enter your IMEI to include it in the diagnostic results.</p>
+                    <input type="text" id="resultsImeiInput" class="imei-input"
+                           placeholder="Enter or paste IMEI" inputmode="numeric"
+                           maxlength="15" autocomplete="off">
+                    <div class="imei-error hidden" id="resultsImeiError">Invalid IMEI \u2014 must be 15 digits</div>
+                    <div class="imei-instructions">
+                        <div class="imei-instructions-title">How to find your IMEI:</div>
+                        <div>1. Go to <strong>Settings &gt; General &gt; About</strong></div>
+                        <div>2. Long-press the <strong>IMEI</strong> to copy it</div>
+                        <div>3. Come back here and paste</div>
+                    </div>
+                    <button class="btn btn-start btn-sm" id="saveImeiBtn">Save IMEI</button>
+                </div>
                 <div class="results-actions">
                     <button class="btn btn-start" id="restartBtn">Run Again</button>
                 </div>
@@ -1174,6 +1157,39 @@ class TestRunner {
 
         this.container.querySelector('#restartBtn').addEventListener('click', () => {
             this._startTests();
+        });
+
+        // IMEI input in results
+        const imeiSection = this.container.querySelector('#imeiSection');
+        const imeiInput = this.container.querySelector('#resultsImeiInput');
+        const imeiError = this.container.querySelector('#resultsImeiError');
+
+        if (this.imei) {
+            imeiSection.style.display = 'none';
+        }
+
+        imeiInput.addEventListener('input', () => {
+            imeiInput.value = imeiInput.value.replace(/\D/g, '');
+            imeiError.classList.add('hidden');
+        });
+
+        this.container.querySelector('#saveImeiBtn').addEventListener('click', () => {
+            const val = imeiInput.value.trim();
+            if (!val) {
+                imeiError.textContent = 'IMEI is required';
+                imeiError.classList.remove('hidden');
+                return;
+            }
+            if (!DeviceInfo.validateIMEI(val)) {
+                imeiError.textContent = 'Invalid IMEI \u2014 must be 15 digits';
+                imeiError.classList.remove('hidden');
+                return;
+            }
+            this.imei = val;
+            // Update device card with IMEI
+            const deviceCard = this.container.querySelector('.results-device-card');
+            deviceCard.innerHTML += `<div class="device-info-row"><span>IMEI</span><span class="mono">${val}</span></div>`;
+            imeiSection.style.display = 'none';
         });
 
         this.container.dispatchEvent(new CustomEvent('testscomplete', {

@@ -9,6 +9,7 @@ struct SpeakerTestView: View {
     @State private var engine: AVAudioEngine?
     @State private var recorder: AVAudioRecorder?
     @State private var peakLevel: Float = -160
+    @State private var verified = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -34,6 +35,16 @@ struct SpeakerTestView: View {
                     }
                     .animation(.easeInOut(duration: 0.2), value: phase)
 
+                if verified {
+                    HStack(spacing: 6) {
+                        Image(systemName: "checkmark.circle.fill")
+                        Text("Verified")
+                    }
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundColor(Theme.pass)
+                    .transition(.opacity)
+                }
+
                 if case .idle = phase {
                     Button(action: playAndRecord) {
                         HStack(spacing: 8) {
@@ -53,7 +64,13 @@ struct SpeakerTestView: View {
 
             Spacer()
 
-            if case .error = phase {
+            if case .idle = phase {
+                TestActionButtons(
+                    onPass: { onComplete(.pass, nil) },
+                    onFail: { onComplete(.fail, nil) },
+                    onSkip: { onComplete(.skipped, nil) }
+                )
+            } else if case .error = phase {
                 TestActionButtons(
                     onPass: { onComplete(.pass, "Speaker tone audible") },
                     onFail: { onComplete(.fail, nil) },
@@ -186,7 +203,12 @@ struct SpeakerTestView: View {
         let passed = peakLevel > -40
         phase = passed ? .pass : .fail
         let detail = String(format: passed ? "Speaker tone detected (peak: %.1f dB)" : "No speaker tone detected (peak: %.1f dB)", peakLevel)
-        onComplete(passed ? .pass : .fail, detail)
+        if passed {
+            withAnimation { verified = true }
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+            onComplete(passed ? .pass : .fail, detail)
+        }
     }
 }
 

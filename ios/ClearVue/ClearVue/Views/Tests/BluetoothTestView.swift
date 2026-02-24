@@ -7,6 +7,7 @@ struct BluetoothTestView: View {
 
     @StateObject private var service = BluetoothService()
     @State private var autoCompleted = false
+    @State private var verified = false
 
     private var statusColor: Color {
         switch service.state {
@@ -34,6 +35,16 @@ struct BluetoothTestView: View {
                 Text(service.stateDescription)
                     .font(.title3.weight(.semibold))
                     .foregroundColor(statusColor)
+
+                if verified {
+                    HStack(spacing: 6) {
+                        Image(systemName: "checkmark.circle.fill")
+                        Text("Verified")
+                    }
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundColor(Theme.pass)
+                    .transition(.opacity)
+                }
             }
             .padding(.horizontal, 24)
 
@@ -62,6 +73,7 @@ struct BluetoothTestView: View {
         .onChange(of: service.state) { newState in
             if newState == .poweredOn && !autoCompleted {
                 autoCompleted = true
+                withAnimation { verified = true }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
                     onComplete(.pass, "Bluetooth state: \(service.stateDescription)")
                 }

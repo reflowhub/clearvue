@@ -4,9 +4,16 @@ struct ResultsView: View {
     @ObservedObject var runner: TestRunner
     @State private var pdfURL: URL?
     @State private var showShareSheet = false
+    @State private var imeiText: String = ""
+    @State private var validationError: String?
+    @FocusState private var isFieldFocused: Bool
 
     private var report: DiagnosticReport {
         runner.buildReport()
+    }
+
+    private var hasValidIMEI: Bool {
+        runner.imei != nil
     }
 
     var body: some View {
@@ -87,6 +94,93 @@ struct ResultsView: View {
                 .padding(.horizontal, 24)
                 .padding(.bottom, 24)
 
+                // IMEI input (required before sharing PDF)
+                if !hasValidIMEI {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("IMEI Required")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundColor(Theme.textPrimary)
+
+                        Text("Enter your IMEI to include it in the PDF report.")
+                            .font(.caption)
+                            .foregroundColor(Theme.textSecondary)
+
+                        TextField("", text: $imeiText, prompt: Text("Enter or paste IMEI").foregroundColor(Theme.textDim))
+                            .keyboardType(.numberPad)
+                            .font(.body.monospacedDigit())
+                            .foregroundColor(Theme.textPrimary)
+                            .padding(14)
+                            .background(Theme.surface)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(validationError != nil ? Theme.fail : Color.clear, lineWidth: 1)
+                            )
+                            .focused($isFieldFocused)
+                            .onChange(of: imeiText) { newValue in
+                                let digits = newValue.filter { $0.isNumber }
+                                if digits != newValue {
+                                    imeiText = digits
+                                }
+                                validationError = nil
+                            }
+
+                        if let error = validationError {
+                            Text(error)
+                                .font(.caption)
+                                .foregroundColor(Theme.fail)
+                        }
+
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("How to find your IMEI:")
+                                .font(.caption.weight(.medium))
+                                .foregroundColor(Theme.textMuted)
+
+                            HStack(alignment: .top, spacing: 8) {
+                                Text("1.")
+                                    .font(.caption)
+                                    .foregroundColor(Theme.textDim)
+                                Text("Go to **Settings > General > About**")
+                                    .font(.caption)
+                                    .foregroundColor(Theme.textDim)
+                            }
+                            HStack(alignment: .top, spacing: 8) {
+                                Text("2.")
+                                    .font(.caption)
+                                    .foregroundColor(Theme.textDim)
+                                Text("Long-press the **IMEI** to copy it")
+                                    .font(.caption)
+                                    .foregroundColor(Theme.textDim)
+                            }
+                            HStack(alignment: .top, spacing: 8) {
+                                Text("3.")
+                                    .font(.caption)
+                                    .foregroundColor(Theme.textDim)
+                                Text("Come back here and paste")
+                                    .font(.caption)
+                                    .foregroundColor(Theme.textDim)
+                            }
+                        }
+                        .padding(.top, 4)
+
+                        Button(action: submitIMEI) {
+                            Text("Save IMEI")
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundColor(Color(hex: 0x0A0A0A))
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 14)
+                                .background(Theme.textPrimary)
+                                .clipShape(RoundedRectangle(cornerRadius: Theme.buttonRadius))
+                        }
+                        .padding(.top, 4)
+                    }
+                    .padding(16)
+                    .background(Theme.surface)
+                    .clipShape(RoundedRectangle(cornerRadius: Theme.cardRadius))
+                    .padding(.horizontal, 24)
+                    .padding(.bottom, 24)
+                }
+
                 // Actions
                 VStack(spacing: 12) {
                     Button(action: generateAndSharePDF) {
@@ -95,12 +189,13 @@ struct ResultsView: View {
                             Text("Share Report PDF")
                         }
                         .font(.body.weight(.semibold))
-                        .foregroundColor(Color(hex: 0x0A0A0A))
+                        .foregroundColor(hasValidIMEI ? Color(hex: 0x0A0A0A) : Theme.textDim)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
-                        .background(Theme.textPrimary)
+                        .background(hasValidIMEI ? Theme.textPrimary : Theme.surface)
                         .clipShape(RoundedRectangle(cornerRadius: Theme.buttonRadius))
                     }
+                    .disabled(!hasValidIMEI)
 
                     Button(action: { runner.restart() }) {
                         Text("Run Again")
@@ -121,11 +216,41 @@ struct ResultsView: View {
                     .padding(.bottom, 24)
             }
         }
+        .onTapGesture { isFieldFocused = false }
         .sheet(isPresented: $showShareSheet) {
             if let url = pdfURL {
                 ShareSheet(items: [url])
             }
         }
+    }
+
+    private func submitIMEI() {
+        let trimmed = imeiText.trimmingCharacters(in: .whitespaces)
+        if trimmed.isEmpty {
+            validationError = "IMEI is required"
+            return
+        }
+        if !validateIMEI(trimmed) {
+            validationError = "Invalid IMEI \u{2014} must be 15 digits"
+            return
+        }
+        runner.imei = trimmed
+        isFieldFocused = false
+    }
+
+    private func validateIMEI(_ imei: String) -> Bool {
+        guard imei.count == 15, imei.allSatisfy({ $0.isNumber }) else { return false }
+        let digits = imei.compactMap { $0.wholeNumberValue }
+        var sum = 0
+        for (index, digit) in digits.enumerated() {
+            if index % 2 == 1 {
+                let doubled = digit * 2
+                sum += doubled > 9 ? doubled - 9 : doubled
+            } else {
+                sum += digit
+            }
+        }
+        return sum % 10 == 0
     }
 
     private func generateAndSharePDF() {

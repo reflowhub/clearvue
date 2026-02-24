@@ -166,7 +166,7 @@ struct CameraTestView: View {
                 Button(action: captureAndAnalyze) {
                     HStack(spacing: 8) {
                         Image(systemName: "camera.fill")
-                        Text("Capture & Analyze")
+                        Text("Capture")
                     }
                     .font(.body.weight(.semibold))
                     .frame(maxWidth: .infinity)

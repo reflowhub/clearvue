@@ -7,6 +7,7 @@ struct FaceIDTestView: View {
     @State private var status: String = ""
     @State private var hasAttempted = false
     @State private var biometricFailed = false
+    @State private var verified = false
 
     private let service = FaceIDService()
 
@@ -34,6 +35,16 @@ struct FaceIDTestView: View {
                         .font(.subheadline)
                         .foregroundColor(biometricFailed ? Theme.fail : Theme.pass)
                         .padding(.top, 8)
+                }
+
+                if verified {
+                    HStack(spacing: 6) {
+                        Image(systemName: "checkmark.circle.fill")
+                        Text("Verified")
+                    }
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundColor(Theme.pass)
+                    .transition(.opacity)
                 }
 
                 if !hasAttempted {
@@ -78,7 +89,10 @@ struct FaceIDTestView: View {
             case .success:
                 status = "Face ID authenticated successfully"
                 biometricFailed = false
-                onComplete(.pass, "Biometric auth successful")
+                withAnimation { verified = true }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                    onComplete(.pass, "Biometric auth successful")
+                }
             case .failed(let msg):
                 status = msg
                 biometricFailed = true

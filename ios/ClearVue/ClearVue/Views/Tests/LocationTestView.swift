@@ -8,6 +8,7 @@ struct LocationTestView: View {
     @StateObject private var service = LocationService()
     @State private var hasStarted = false
     @State private var autoCompleted = false
+    @State private var verified = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -36,6 +37,7 @@ struct LocationTestView: View {
         .onChange(of: service.state) { newState in
             if newState.isAcquired && !autoCompleted {
                 autoCompleted = true
+                withAnimation { verified = true }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
                     onComplete(.pass, locationDetail)
                 }
@@ -100,6 +102,16 @@ struct LocationTestView: View {
                 }
                 .font(.subheadline.monospaced())
                 .foregroundColor(Theme.textMuted)
+
+                if verified {
+                    HStack(spacing: 6) {
+                        Image(systemName: "checkmark.circle.fill")
+                        Text("Verified")
+                    }
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundColor(Theme.pass)
+                    .transition(.opacity)
+                }
             }
 
         case .failed(let msg):

@@ -5,6 +5,7 @@ struct MicrophoneTestView: View {
     let onComplete: (TestStatus, String?) -> Void
 
     @StateObject private var audioService = AudioService()
+    @State private var verified = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -48,10 +49,15 @@ struct MicrophoneTestView: View {
             guard done else { return }
             let passed = audioService.recordingDetected
             let peak = String(format: "%.1f", audioService.peakRecordingLevel)
-            onComplete(
-                passed ? .pass : .fail,
-                passed ? "Audio detected (peak: \(peak) dB)" : "No audio detected (peak: \(peak) dB)"
-            )
+            if passed {
+                withAnimation { verified = true }
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                onComplete(
+                    passed ? .pass : .fail,
+                    passed ? "Audio detected (peak: \(peak) dB)" : "No audio detected (peak: \(peak) dB)"
+                )
+            }
         }
     }
 
@@ -103,6 +109,16 @@ struct MicrophoneTestView: View {
                 Text(audioService.recordingDetected ? "Microphone working" : "No audio detected")
                     .font(.title3.weight(.semibold))
                     .foregroundColor(audioService.recordingDetected ? Theme.pass : Theme.fail)
+
+                if verified {
+                    HStack(spacing: 6) {
+                        Image(systemName: "checkmark.circle.fill")
+                        Text("Verified")
+                    }
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundColor(Theme.pass)
+                    .transition(.opacity)
+                }
             }
 
         case .error(let msg):

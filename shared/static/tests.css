@@ -505,14 +505,6 @@ body {
     margin-bottom: 2rem;
 }
 
-/* --- Vibration --- */
-
-.vibration-note {
-    font-size: 0.875rem;
-    color: #86868b;
-    margin-bottom: 2rem;
-}
-
 /* --- Physical Buttons --- */
 
 .button-prompt {

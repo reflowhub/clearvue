@@ -30,7 +30,6 @@
 		A10022AA /* BluetoothTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10022AB /* BluetoothTestView.swift */; };
 		A10023AA /* LocationTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10023AB /* LocationTestView.swift */; };
 		A10024AA /* MotionTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10024AB /* MotionTestView.swift */; };
-		A10025AA /* VibrationTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10025AB /* VibrationTestView.swift */; };
 		A10026AA /* ButtonsTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10026AB /* ButtonsTestView.swift */; };
 		A10028AA /* FaceIDService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10028AB /* FaceIDService.swift */; };
 		A10029AA /* CameraService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10029AB /* CameraService.swift */; };
@@ -70,7 +69,6 @@
 		A10022AB /* BluetoothTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothTestView.swift; sourceTree = "<group>"; };
 		A10023AB /* LocationTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationTestView.swift; sourceTree = "<group>"; };
 		A10024AB /* MotionTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionTestView.swift; sourceTree = "<group>"; };
-		A10025AB /* VibrationTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VibrationTestView.swift; sourceTree = "<group>"; };
 		A10026AB /* ButtonsTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonsTestView.swift; sourceTree = "<group>"; };
 		A10028AB /* FaceIDService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceIDService.swift; sourceTree = "<group>"; };
 		A10029AB /* CameraService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraService.swift; sourceTree = "<group>"; };
@@ -174,7 +172,6 @@
 				A10022AB /* BluetoothTestView.swift */,
 				A10023AB /* LocationTestView.swift */,
 				A10024AB /* MotionTestView.swift */,
-				A10025AB /* VibrationTestView.swift */,
 				A10026AB /* ButtonsTestView.swift */,
 			);
 			path = Tests;
@@ -301,7 +298,6 @@
 				A10022AA /* BluetoothTestView.swift in Sources */,
 				A10023AA /* LocationTestView.swift in Sources */,
 				A10024AA /* MotionTestView.swift in Sources */,
-				A10025AA /* VibrationTestView.swift in Sources */,
 				A10026AA /* ButtonsTestView.swift in Sources */,
 				A10028AA /* FaceIDService.swift in Sources */,
 				A10029AA /* CameraService.swift in Sources */,

@@ -95,8 +95,6 @@ struct TestContainerView: View {
             LocationTestView(test: test, onComplete: onComplete)
         case .motion:
             MotionTestView(test: test, onComplete: onComplete)
-        case .vibration:
-            VibrationTestView(test: test, onComplete: onComplete)
         case .buttons:
             ButtonsTestView(test: test, onComplete: onComplete)
         }

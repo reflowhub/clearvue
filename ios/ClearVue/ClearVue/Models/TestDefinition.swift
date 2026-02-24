@@ -13,7 +13,6 @@ enum TestID: String, CaseIterable, Codable {
     case cellular = "cellular"
     case gps = "gps"
     case accelerometerGyroscope = "accel_gyro"
-    case vibration = "vibration"
     case buttons = "buttons"
 }
 
@@ -34,7 +33,6 @@ enum TestType {
     case bluetooth
     case geolocation
     case motion
-    case vibration
     case buttons
 }
 
@@ -137,13 +135,6 @@ struct TestDefinition: Identifiable {
             description: "Tilt and rotate your device in all directions.",
             type: .motion,
             verification: .tested
-        ),
-        TestDefinition(
-            id: .vibration,
-            name: "Vibration (Taptic Engine)",
-            description: "Testing haptic feedback...",
-            type: .vibration,
-            verification: .selfReported
         ),
         TestDefinition(
             id: .buttons,

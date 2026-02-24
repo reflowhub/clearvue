@@ -171,13 +171,6 @@ const TEST_DEFS = [
         verification: 'tested',
     },
     {
-        id: 'vibration',
-        name: 'Vibration (Taptic Engine)',
-        description: 'Testing haptic feedback...',
-        type: 'vibration',
-        verification: 'self-reported',
-    },
-    {
         id: 'buttons',
         name: 'Physical Buttons',
         description: 'Test each physical button when prompted.',
@@ -337,7 +330,6 @@ class TestRunner {
             case 'unsupported':  this._setupUnsupported(content, actions, test); break;
             case 'geolocation':  this._setupGeolocation(content, actions, test); break;
             case 'motion':       this._setupMotion(content, actions, test); break;
-            case 'vibration':    this._setupVibration(content, actions, test); break;
             case 'buttons':      this._setupButtons(content, actions, test); break;
         }
     }
@@ -936,68 +928,6 @@ class TestRunner {
                 this._addButtons(actions, test.id);
             }
         }, 3000);
-    }
-
-    /* --- Vibration Test ------------------------------------------- */
-
-    _setupVibration(content, actions, test) {
-        const iosMatch = navigator.userAgent.match(/OS (\d+)_/);
-        const iosVersion = iosMatch ? parseInt(iosMatch[1], 10) : 0;
-
-        if (iosVersion >= 18) {
-            content.innerHTML = `
-                <div class="connectivity-status" id="vibStatus">Ready to test haptic feedback</div>
-                <p class="vibration-note">A toggle switch will trigger the Taptic Engine.</p>
-            `;
-
-            const wrapper = document.createElement('div');
-            wrapper.style.cssText = 'position:absolute;left:-9999px;opacity:0;pointer-events:none;';
-            const label = document.createElement('label');
-            label.id = 'hapticLabel';
-            const input = document.createElement('input');
-            input.type = 'checkbox';
-            input.setAttribute('switch', '');
-            label.appendChild(input);
-            wrapper.appendChild(label);
-            content.appendChild(wrapper);
-
-            actions.innerHTML = `<button class="btn btn-start" id="triggerHapticBtn">Trigger Haptic</button>`;
-
-            this.container.querySelector('#triggerHapticBtn').addEventListener('click', () => {
-                const statusEl = this.container.querySelector('#vibStatus');
-                label.click();
-                setTimeout(() => { label.click(); }, 300);
-                setTimeout(() => { label.click(); }, 600);
-
-                setTimeout(() => {
-                    statusEl.textContent = 'Did you feel a vibration?';
-                    this._addButtons(actions, test.id);
-                }, 800);
-            });
-
-        } else if (typeof navigator.vibrate === 'function') {
-            content.innerHTML = `<div class="connectivity-status">Testing vibration...</div>`;
-            navigator.vibrate([200, 100, 200]);
-            setTimeout(() => {
-                content.querySelector('.connectivity-status').textContent = 'Did you feel a vibration?';
-                this._addButtons(actions, test.id);
-            }, 600);
-
-        } else {
-            content.innerHTML = `
-                <div class="unsupported-icon">&#x2718;</div>
-                <div class="unsupported-reason">
-                    Haptic feedback cannot be triggered from the browser on iOS ${iosVersion || '(version unknown)'}.<br>
-                    This feature requires iOS 18 or later.
-                </div>
-            `;
-            actions.innerHTML = `
-                <button class="btn btn-not-testable" data-action="not_testable">Mark Not Testable</button>
-            `;
-            actions.querySelector('.btn').addEventListener('click', () => {
-                this._record(test.id, 'not_testable');
-            });
-        }
     }
 
     /* --- Physical Buttons Test ------------------------------------ */

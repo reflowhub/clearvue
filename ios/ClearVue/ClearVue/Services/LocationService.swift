@@ -1,11 +1,25 @@
 import CoreLocation
 import Combine
 
-enum LocationState {
+enum LocationState: Equatable {
     case idle
     case requesting
     case acquired(CLLocation)
     case failed(String)
+
+    static func == (lhs: LocationState, rhs: LocationState) -> Bool {
+        switch (lhs, rhs) {
+        case (.idle, .idle), (.requesting, .requesting): return true
+        case (.acquired, .acquired): return true
+        case (.failed(let a), .failed(let b)): return a == b
+        default: return false
+        }
+    }
+
+    var isAcquired: Bool {
+        if case .acquired = self { return true }
+        return false
+    }
 }
 
 class LocationService: NSObject, ObservableObject, CLLocationManagerDelegate {

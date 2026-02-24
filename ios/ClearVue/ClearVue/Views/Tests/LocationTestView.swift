@@ -7,6 +7,7 @@ struct LocationTestView: View {
 
     @StateObject private var service = LocationService()
     @State private var hasStarted = false
+    @State private var autoCompleted = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -31,6 +32,14 @@ struct LocationTestView: View {
         }
         .onDisappear {
             service.stop()
+        }
+        .onChange(of: service.state) { newState in
+            if newState.isAcquired && !autoCompleted {
+                autoCompleted = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                    onComplete(.pass, locationDetail)
+                }
+            }
         }
     }
 

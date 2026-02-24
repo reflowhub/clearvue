@@ -6,6 +6,7 @@ struct ConnectivityTestView: View {
     let onComplete: (TestStatus, String?) -> Void
 
     @StateObject private var service = ConnectivityService()
+    @State private var autoCompleted = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -43,6 +44,14 @@ struct ConnectivityTestView: View {
         }
         .onDisappear {
             service.stop()
+        }
+        .onChange(of: currentStatus.isConnected) { connected in
+            if connected && !autoCompleted {
+                autoCompleted = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                    onComplete(.pass, statusDetail)
+                }
+            }
         }
     }
 

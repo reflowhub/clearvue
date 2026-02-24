@@ -751,6 +751,10 @@ class TestRunner {
                 details.push(`Latency: ${elapsed}ms`);
                 statusEl.textContent = 'Wi-Fi Connected';
                 statusEl.className = 'connectivity-status success';
+                infoEl.innerHTML = details.join('<br>');
+                // Auto-pass after brief delay
+                setTimeout(() => this._record(test.id, 'pass'), 800);
+                return;
             } catch (err) {
                 statusEl.textContent = 'Network request failed';
                 statusEl.className = 'connectivity-status error';
@@ -769,6 +773,14 @@ class TestRunner {
                 if (conn.effectiveType) details.push(`Connection type: ${conn.effectiveType}`);
                 if (conn.downlink) details.push(`Downlink: ${conn.downlink} Mbps`);
                 infoEl.innerHTML = details.join('<br>');
+
+                // Auto-pass if connection data available (implies cellular is active)
+                if (conn.effectiveType && conn.effectiveType !== 'none') {
+                    statusEl.textContent = 'Cellular Connected';
+                    statusEl.className = 'connectivity-status success';
+                    setTimeout(() => this._record(test.id, 'pass'), 800);
+                    return;
+                }
             } else {
                 infoEl.innerHTML = 'Turn off Wi-Fi and verify you have cellular data connectivity, then report below.';
             }
@@ -831,7 +843,8 @@ class TestRunner {
                 const acc = Math.round(position.coords.accuracy);
                 infoEl.innerHTML = `Lat: ${lat}, Lon: ${lon}<br>Accuracy: ${acc}m`;
                 timerEl.textContent = 'GPS OK';
-                this._addButtons(actions, test.id);
+                // Auto-pass after brief delay
+                setTimeout(() => this._record(test.id, 'pass'), 800);
             },
             (error) => {
                 clearInterval(interval);

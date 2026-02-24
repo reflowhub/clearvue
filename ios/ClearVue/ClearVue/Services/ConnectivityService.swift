@@ -11,11 +11,13 @@ class ConnectivityService: ObservableObject {
     private var wifiMonitor: NWPathMonitor?
     private var cellularMonitor: NWPathMonitor?
 
-    enum ConnectionStatus {
+    enum ConnectionStatus: Equatable {
         case checking
         case connected
         case disconnected
         case error(String)
+
+        var isConnected: Bool { self == .connected }
     }
 
     func checkWifi() {

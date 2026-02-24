@@ -6,6 +6,7 @@ struct BluetoothTestView: View {
     let onComplete: (TestStatus, String?) -> Void
 
     @StateObject private var service = BluetoothService()
+    @State private var autoCompleted = false
 
     private var statusColor: Color {
         switch service.state {
@@ -57,6 +58,14 @@ struct BluetoothTestView: View {
         }
         .onDisappear {
             service.stop()
+        }
+        .onChange(of: service.state) { newState in
+            if newState == .poweredOn && !autoCompleted {
+                autoCompleted = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                    onComplete(.pass, "Bluetooth state: \(service.stateDescription)")
+                }
+            }
         }
     }
 }

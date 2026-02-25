@@ -45,6 +45,10 @@ class PDFGenerator {
                 "IMEI: \(imei)".draw(at: CGPoint(x: margin, y: y), withAttributes: metaAttrs)
                 y += 16
             }
+            if let tacLabel = report.tacResult?.deviceLabel {
+                "TAC Device: \(tacLabel)".draw(at: CGPoint(x: margin, y: y), withAttributes: metaAttrs)
+                y += 16
+            }
             if let storage = report.formattedStorage {
                 "Storage: \(storage)".draw(at: CGPoint(x: margin, y: y), withAttributes: metaAttrs)
                 y += 16

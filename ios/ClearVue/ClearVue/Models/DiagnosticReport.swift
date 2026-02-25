@@ -8,6 +8,7 @@ struct DiagnosticReport: Codable {
     let deviceModel: String
     let iosVersion: String
     let imei: String?
+    let tacResult: TACResult?
     let storageTotal: Int64?
     let storageAvailable: Int64?
     let batteryHealth: Int?

@@ -14,6 +14,7 @@ class TestRunner: ObservableObject {
     @Published var results: [TestID: TestResult] = [:]
     @Published var testKey: UUID = UUID()
     @Published var imei: String?
+    @Published var tacResult: TACResult?
 
     let tests = TestDefinition.allTests
     private var startTime: Date = Date()
@@ -95,6 +96,7 @@ class TestRunner: ObservableObject {
             deviceModel: DiagnosticReport.currentDeviceModel,
             iosVersion: DiagnosticReport.currentIOSVersion,
             imei: imei,
+            tacResult: tacResult,
             storageTotal: DiagnosticReport.currentStorageTotal,
             storageAvailable: DiagnosticReport.currentStorageAvailable,
             batteryHealth: DiagnosticReport.currentBatteryHealth,

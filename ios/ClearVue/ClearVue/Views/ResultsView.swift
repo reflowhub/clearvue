@@ -6,6 +6,7 @@ struct ResultsView: View {
     @State private var showShareSheet = false
     @State private var imeiText: String = ""
     @State private var validationError: String?
+    @State private var isValidating = false
     @FocusState private var isFieldFocused: Bool
 
     private var report: DiagnosticReport {
@@ -63,6 +64,14 @@ struct ResultsView: View {
                                 .monospacedDigit()
                             Spacer()
                             Text("IMEI")
+                        }
+                    }
+
+                    if let tacLabel = report.tacResult?.deviceLabel {
+                        HStack {
+                            Label(tacLabel, systemImage: "cpu")
+                            Spacer()
+                            Text("TAC")
                         }
                     }
 
@@ -164,14 +173,21 @@ struct ResultsView: View {
                         .padding(.top, 4)
 
                         Button(action: submitIMEI) {
-                            Text("Save IMEI")
-                                .font(.subheadline.weight(.semibold))
-                                .foregroundColor(Color(hex: 0x0A0A0A))
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 14)
-                                .background(Theme.textPrimary)
-                                .clipShape(RoundedRectangle(cornerRadius: Theme.buttonRadius))
+                            HStack(spacing: 8) {
+                                if isValidating {
+                                    ProgressView()
+                                        .tint(Color(hex: 0x0A0A0A))
+                                }
+                                Text(isValidating ? "Validating..." : "Save IMEI")
+                            }
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundColor(Color(hex: 0x0A0A0A))
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 14)
+                            .background(Theme.textPrimary)
+                            .clipShape(RoundedRectangle(cornerRadius: Theme.buttonRadius))
                         }
+                        .disabled(isValidating)
                         .padding(.top, 4)
                     }
                     .padding(16)
@@ -229,27 +245,30 @@ struct ResultsView: View {
             validationError = "IMEI is required"
             return
         }
-        if !validateIMEI(trimmed) {
+        guard trimmed.count == 15, trimmed.allSatisfy({ $0.isNumber }) else {
             validationError = "Invalid IMEI \u{2014} must be 15 digits"
             return
         }
-        runner.imei = trimmed
         isFieldFocused = false
-    }
+        isValidating = true
+        validationError = nil
 
-    private func validateIMEI(_ imei: String) -> Bool {
-        guard imei.count == 15, imei.allSatisfy({ $0.isNumber }) else { return false }
-        let digits = imei.compactMap { $0.wholeNumberValue }
-        var sum = 0
-        for (index, digit) in digits.enumerated() {
-            if index % 2 == 1 {
-                let doubled = digit * 2
-                sum += doubled > 9 ? doubled - 9 : doubled
-            } else {
-                sum += digit
+        Task {
+            do {
+                let result = try await IMEIService.lookup(trimmed)
+                isValidating = false
+                if result.valid {
+                    runner.tacResult = result
+                    runner.imei = trimmed
+                } else {
+                    validationError = result.error ?? "IMEI not recognized"
+                }
+            } catch {
+                isValidating = false
+                // Network error — still accept the IMEI locally
+                runner.imei = trimmed
             }
         }
-        return sum % 10 == 0
     }
 
     private func sharePDFTapped() {

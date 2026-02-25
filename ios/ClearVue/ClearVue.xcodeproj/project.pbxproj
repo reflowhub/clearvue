@@ -42,6 +42,7 @@
 		A10037AA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A10037AB /* Assets.xcassets */; };
 		A10040AA /* DeviceInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10040AB /* DeviceInfoView.swift */; };
 		A10041AA /* LensAnalysisService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10041AB /* LensAnalysisService.swift */; };
+		A10042AA /* IMEIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10042AB /* IMEIService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -83,6 +84,7 @@
 		A10039AB /* ClearVue.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ClearVue.entitlements; sourceTree = "<group>"; };
 		A10040AB /* DeviceInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceInfoView.swift; sourceTree = "<group>"; };
 		A10041AB /* LensAnalysisService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LensAnalysisService.swift; sourceTree = "<group>"; };
+		A10042AB /* IMEIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMEIService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,6 +144,7 @@
 				A10034AB /* MotionService.swift */,
 				A10036AB /* PDFGenerator.swift */,
 				A10041AB /* LensAnalysisService.swift */,
+				A10042AB /* IMEIService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -309,6 +312,7 @@
 				A10036AA /* PDFGenerator.swift in Sources */,
 				A10040AA /* DeviceInfoView.swift in Sources */,
 				A10041AA /* LensAnalysisService.swift in Sources */,
+				A10042AA /* IMEIService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -458,7 +462,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1;
+				MARKETING_VERSION = 2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.joinreflow.clearvue;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -491,7 +495,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1;
+				MARKETING_VERSION = 2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.joinreflow.clearvue;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

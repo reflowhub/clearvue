@@ -5,6 +5,8 @@ struct MotionTestView: View {
     let onComplete: (TestStatus, String?) -> Void
 
     @StateObject private var service = MotionService()
+    @State private var autoCompleted = false
+    @State private var verified = false
 
     // Dot position offset based on acceleration
     private var dotOffset: CGSize {
@@ -47,7 +49,15 @@ struct MotionTestView: View {
                                 .animation(.easeOut(duration: 0.1), value: dotOffset.height)
                         }
 
-                    if service.isReceivingData {
+                    if verified {
+                        HStack(spacing: 6) {
+                            Image(systemName: "checkmark.circle.fill")
+                            Text("Verified")
+                        }
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundColor(Theme.pass)
+                        .transition(.opacity)
+                    } else if service.isReceivingData {
                         Text("Sensor data detected")
                             .font(.subheadline.weight(.semibold))
                             .foregroundColor(Theme.pass)
@@ -88,6 +98,15 @@ struct MotionTestView: View {
         }
         .onDisappear {
             service.stop()
+        }
+        .onChange(of: service.isReceivingData) { receiving in
+            if receiving && !autoCompleted {
+                autoCompleted = true
+                withAnimation { verified = true }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                    onComplete(.pass, "Motion sensors functional, \(service.sampleCount) samples")
+                }
+            }
         }
     }
 }

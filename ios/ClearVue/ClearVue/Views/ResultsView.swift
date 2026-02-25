@@ -183,19 +183,18 @@ struct ResultsView: View {
 
                 // Actions
                 VStack(spacing: 12) {
-                    Button(action: generateAndSharePDF) {
+                    Button(action: sharePDFTapped) {
                         HStack {
                             Image(systemName: "square.and.arrow.up")
                             Text("Share Report PDF")
                         }
                         .font(.body.weight(.semibold))
-                        .foregroundColor(hasValidIMEI ? Color(hex: 0x0A0A0A) : Theme.textDim)
+                        .foregroundColor(Color(hex: 0x0A0A0A))
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
-                        .background(hasValidIMEI ? Theme.textPrimary : Theme.surface)
+                        .background(Theme.textPrimary)
                         .clipShape(RoundedRectangle(cornerRadius: Theme.buttonRadius))
                     }
-                    .disabled(!hasValidIMEI)
 
                     Button(action: { runner.restart() }) {
                         Text("Run Again")
@@ -251,6 +250,15 @@ struct ResultsView: View {
             }
         }
         return sum % 10 == 0
+    }
+
+    private func sharePDFTapped() {
+        if !hasValidIMEI {
+            validationError = "IMEI is required before sharing"
+            isFieldFocused = true
+            return
+        }
+        generateAndSharePDF()
     }
 
     private func generateAndSharePDF() {

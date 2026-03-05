@@ -7,6 +7,7 @@ struct ResultsView: View {
     @State private var imeiText: String = ""
     @State private var validationError: String?
     @State private var isValidating = false
+    @State private var tradeInOffer: TradeInOffer?
     @FocusState private var isFieldFocused: Bool
 
     private var report: DiagnosticReport {
@@ -102,6 +103,55 @@ struct ResultsView: View {
                 }
                 .padding(.horizontal, 24)
                 .padding(.bottom, 24)
+
+                // Trade-in offer (AU users only)
+                if let offer = tradeInOffer {
+                    let allPassed = report.failCount == 0
+                    let price = allPassed ? offer.priceA : (offer.priceC ?? offer.priceA)
+
+                    Button {
+                        if let url = URL(string: offer.sellUrl) {
+                            UIApplication.shared.open(url)
+                        }
+                    } label: {
+                        HStack(spacing: 12) {
+                            Image(systemName: "dollarsign.arrow.circlepath")
+                                .font(.title2)
+                                .foregroundColor(Theme.pass)
+
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Trade in your \(offer.model)")
+                                    .font(.subheadline.weight(.semibold))
+                                    .foregroundColor(Theme.textPrimary)
+
+                                Text("Get up to $\(price) \(offer.currency)")
+                                    .font(.title3.weight(.bold))
+                                    .foregroundColor(Theme.pass)
+
+                                if !allPassed {
+                                    Text("Functional issue detected \u{2014} C grade estimate")
+                                        .font(.caption2)
+                                        .foregroundColor(Theme.textMuted)
+                                }
+                            }
+
+                            Spacer()
+
+                            Image(systemName: "chevron.right")
+                                .font(.caption.weight(.semibold))
+                                .foregroundColor(Theme.textDim)
+                        }
+                        .padding(16)
+                        .background(Theme.pass.opacity(0.08))
+                        .clipShape(RoundedRectangle(cornerRadius: Theme.cardRadius))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: Theme.cardRadius)
+                                .stroke(Theme.pass.opacity(0.2), lineWidth: 1)
+                        )
+                    }
+                    .padding(.horizontal, 24)
+                    .padding(.bottom, 24)
+                }
 
                 // IMEI input (required before sharing PDF)
                 if !hasValidIMEI {
@@ -231,6 +281,7 @@ struct ResultsView: View {
                     .padding(.bottom, 24)
             }
         }
+        .task { await fetchTradeInOffer() }
         .onTapGesture { isFieldFocused = false }
         .sheet(isPresented: $showShareSheet) {
             if let url = pdfURL {
@@ -278,6 +329,35 @@ struct ResultsView: View {
             return
         }
         generateAndSharePDF()
+    }
+
+    private func fetchTradeInOffer() async {
+        guard Locale.current.region?.identifier == "AU" else { return }
+
+        // Derive storage string matching rhex format (e.g. "128GB")
+        let storage: String
+        if let tacStorage = runner.tacResult?.storage {
+            storage = tacStorage
+        } else if let total = report.storageTotal {
+            let gb = Double(total) / 1_000_000_000
+            let rounded: Int
+            if gb > 400 { rounded = 512 }
+            else if gb > 200 { rounded = 256 }
+            else if gb > 100 { rounded = 128 }
+            else if gb > 50 { rounded = 64 }
+            else { rounded = 32 }
+            storage = "\(rounded)GB"
+        } else {
+            return
+        }
+
+        let model = runner.tacResult?.model ?? report.deviceModel
+
+        do {
+            tradeInOffer = try await TradeInService.lookup(model: model, storage: storage)
+        } catch {
+            // Silently ignore — no offer shown
+        }
     }
 
     private func generateAndSharePDF() {

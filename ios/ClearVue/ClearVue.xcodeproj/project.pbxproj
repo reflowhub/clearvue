@@ -43,6 +43,7 @@
 		A10040AA /* DeviceInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10040AB /* DeviceInfoView.swift */; };
 		A10041AA /* LensAnalysisService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10041AB /* LensAnalysisService.swift */; };
 		A10042AA /* IMEIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10042AB /* IMEIService.swift */; };
+		A10043AA /* TradeInService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10043AB /* TradeInService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -85,6 +86,7 @@
 		A10040AB /* DeviceInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceInfoView.swift; sourceTree = "<group>"; };
 		A10041AB /* LensAnalysisService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LensAnalysisService.swift; sourceTree = "<group>"; };
 		A10042AB /* IMEIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMEIService.swift; sourceTree = "<group>"; };
+		A10043AB /* TradeInService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeInService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,6 +147,7 @@
 				A10036AB /* PDFGenerator.swift */,
 				A10041AB /* LensAnalysisService.swift */,
 				A10042AB /* IMEIService.swift */,
+				A10043AB /* TradeInService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -313,6 +316,7 @@
 				A10040AA /* DeviceInfoView.swift in Sources */,
 				A10041AA /* LensAnalysisService.swift in Sources */,
 				A10042AA /* IMEIService.swift in Sources */,
+				A10043AA /* TradeInService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

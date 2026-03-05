@@ -197,26 +197,65 @@ class TestRunner {
 
     _setupDemoTest(content, actions, test) {
         content.innerHTML = `
-            <div class="demo-indicator">
-                <div class="demo-ring"></div>
-                <div class="demo-check" id="demoCheck"></div>
-            </div>
+            <div class="mock-visual" id="mockVisual">${this._getMockVisual(test.id)}</div>
             <div class="demo-status-label" id="demoLabel">Testing...</div>
         `;
         actions.innerHTML = '';
 
         setTimeout(() => {
-            const ring = this.container.querySelector('.demo-ring');
-            const check = this.container.querySelector('#demoCheck');
+            const mock = this.container.querySelector('#mockVisual');
             const label = this.container.querySelector('#demoLabel');
-            if (ring) ring.classList.add('complete');
-            if (check) check.classList.add('visible');
+            if (mock) {
+                mock.innerHTML = '<div class="demo-indicator"><div class="demo-ring complete"></div><div class="demo-check visible"></div></div>';
+            }
             if (label) {
                 label.textContent = 'Passed';
                 label.classList.add('passed');
             }
             setTimeout(() => this._record(test.id, 'pass'), 600);
-        }, 1500);
+        }, 2000);
+    }
+
+    _getMockVisual(testId) {
+        switch (testId) {
+            case 'faceid':
+                return '<div class="mock-faceid"><div class="mock-faceid-frame"></div><div class="mock-faceid-scan"></div></div>';
+            case 'display':
+                return '<div class="mock-display"></div>';
+            case 'front_cam':
+                return '<div class="mock-camera"><span class="mock-camera-label">Front</span><div class="mock-camera-focus"></div></div>';
+            case 'rear_cam':
+                return '<div class="mock-camera"><span class="mock-camera-label">Rear</span><div class="mock-camera-focus"></div></div>';
+            case 'touch': {
+                const cells = Array.from({length: 24}, (_, i) =>
+                    `<div class="mock-touch-cell" style="animation-delay:${i * 70}ms"></div>`
+                ).join('');
+                return `<div class="mock-touch">${cells}</div>`;
+            }
+            case 'mic':
+                return '<div class="mock-mic">' + Array(5).fill('<div class="mock-mic-bar"></div>').join('') + '</div>';
+            case 'speaker':
+                return '<div class="mock-speaker"><span class="mock-speaker-icon">\u266B</span><div class="mock-speaker-wave"></div><div class="mock-speaker-wave w2"></div></div>';
+            case 'wifi':
+                return '<div class="mock-signal"><div class="mock-bar b1"></div><div class="mock-bar b2"></div><div class="mock-bar b3"></div></div>';
+            case 'bluetooth':
+                return '<div class="mock-bt"><div class="mock-bt-icon">B</div><div class="mock-bt-pulse"></div></div>';
+            case 'cellular':
+                return '<div class="mock-signal"><div class="mock-bar b1"></div><div class="mock-bar b2"></div><div class="mock-bar b3"></div><div class="mock-bar b4"></div></div>';
+            case 'gps':
+                return '<div class="mock-gps"><div class="mock-gps-pin"></div><div class="mock-gps-pulse"></div></div>';
+            case 'accel_gyro':
+                return '<div class="mock-motion"><div class="mock-motion-dot"></div></div>';
+            case 'buttons': {
+                const labels = ['Vol +', 'Vol \u2212', 'Side'];
+                const rows = labels.map((l, i) =>
+                    `<div class="mock-btn-row"><span>${l}</span><span class="mock-btn-check" style="animation-delay:${i * 500 + 300}ms">\u2713</span></div>`
+                ).join('');
+                return `<div class="mock-buttons">${rows}</div>`;
+            }
+            default:
+                return '<div class="demo-indicator"><div class="demo-ring"></div></div>';
+        }
     }
 
     _record(testId, result) {

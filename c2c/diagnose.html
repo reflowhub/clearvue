@@ -6,25 +6,24 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#0a0a0a">
-    <title>ClearVue - Running Diagnostic</title>
+    <title>Clearvue - Running Diagnostic</title>
     <link rel="stylesheet" href="../shared/static/tests.css">
 </head>
 <body>
     <div id="app">
         <!-- Pre-test intro screen -->
         <div class="test-header">
-            <div class="brand">ClearVue</div>
+            <div class="brand">Clearvue</div>
             <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
             <div class="progress-text">Ready</div>
         </div>
         <div class="test-body">
             <h2>iPhone Diagnostic</h2>
             <p class="test-description">
-                You'll run through 13 functional tests covering display, cameras, audio,
-                connectivity, sensors, and hardware. Each takes a few seconds.
-                You'll need to grant camera, microphone, and location access when prompted.
+                This demo runs through 13 functional tests covering display, cameras, audio,
+                connectivity, sensors, and hardware.
                 <br><br>
-                <em style="color:#48484a;font-size:0.875rem">Some tests require the <a href="https://apps.apple.com/app/clearvue-app/id6443946885" target="_blank" rel="noopener noreferrer" style="color:#0071e3">native iOS app</a> for full hardware verification.</em>
+                <em style="color:#48484a;font-size:0.875rem">For full hardware-verified diagnostics, use the <a href="https://apps.apple.com/app/clearvue-app/id6443946885" target="_blank" rel="noopener noreferrer" style="color:#0071e3">Clearvue iOS app</a>.</em>
             </p>
         </div>
         <div class="test-actions">
@@ -46,7 +45,7 @@
 
         // Listen for completion (future use: PDF gen, share links)
         app.addEventListener('testscomplete', (e) => {
-            console.log('ClearVue diagnostic complete:', e.detail);
+            console.log('Clearvue diagnostic complete:', e.detail);
         });
     </script>
 <script defer src="/_vercel/insights/script.js"></script>

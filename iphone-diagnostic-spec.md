@@ -5,7 +5,7 @@
 Build a diagnostic testing platform for iPhones with two modes:
 
 1. **B2B Operator Tool** — macOS application for factory-reset iPhones. Collects device info via USB and runs functional tests, outputting results to CSV for grading devices before resale.
-2. **C2C Consumer Web App** — Public-access mobile browser app (hosted, no install required). Consumers self-diagnose their own iPhones and generate shareable test reports for peer-to-peer sales. Serves as a free marketing/trust tool for the ClearVue brand.
+2. **C2C Consumer Web App** — Public-access mobile browser app (hosted, no install required). Consumers self-diagnose their own iPhones and generate shareable test reports for peer-to-peer sales. Serves as a free marketing/trust tool for the Clearvue brand.
 
 ## Target Users
 
@@ -383,7 +383,7 @@ Note: Tesseract.js and jsPDF are client-side JS libraries loaded in the browser 
 
 ### Overview
 
-A publicly accessible, mobile-optimized web app that runs entirely in Safari on the consumer's own iPhone. No app install, no login, no payment. Serves as a trust-building marketing tool for ClearVue while giving consumers a credible diagnostic report to share with buyers.
+A publicly accessible, mobile-optimized web app that runs entirely in Safari on the consumer's own iPhone. No app install, no login, no payment. Serves as a trust-building marketing tool for Clearvue while giving consumers a credible diagnostic report to share with buyers.
 
 ### What C2C Can and Cannot Access
 
@@ -510,14 +510,14 @@ Same sequential test flow as B2B (all browser-based functional tests). The test 
 
 On-screen results page showing:
 
-- ClearVue branding and report header
+- Clearvue branding and report header
 - Timestamp: both ISO 8601 (`2026-01-28T14:32:00Z`) and human-readable (`January 28, 2026 at 2:32 PM`)
 - Device info section (with "self-reported" labels where applicable)
 - Test results grid: each test with pass/fail/untestable status
 - Overall summary score (e.g., "14/15 tests passed")
 - "Download PDF" button
 - "Copy Share Link" button (if server storage enabled)
-- ClearVue footer with branding
+- Clearvue footer with branding
 
 ---
 
@@ -537,7 +537,7 @@ Both B2B (operator can export per-device) and C2C (consumer downloads directly).
 
 ```
 ┌──────────────────────────────────────────────┐
-│  ClearVue iPhone Diagnostic Report           │
+│  Clearvue iPhone Diagnostic Report           │
 │                                              │
 │  Report ID: CVR-2026-01-28-A3F9             │
 │  Generated: January 28, 2026 at 2:32 PM EST │
@@ -582,11 +582,11 @@ Both B2B (operator can export per-device) and C2C (consumer downloads directly).
 │                 Self-reported / Auto-detected │
 │                                              │
 │  ─── Report Metadata ─────────────────────── │
-│  Source: [ClearVue B2B Tool / ClearVue C2C]  │
+│  Source: [Clearvue B2B Tool / Clearvue C2C]  │
 │  Self-reported fields marked with *          │
 │  Verify report: clearvue.rhex.app/report/ID  │
 │                                              │
-│  © 2026 ClearVue — clearvue.rhex.app        │
+│  © 2026 Clearvue — clearvue.rhex.app        │
 └──────────────────────────────────────────────┘
 ```
 
@@ -620,7 +620,7 @@ Both B2B (operator can export per-device) and C2C (consumer downloads directly).
 
 **Files to create:**
 
-- `c2c/index.html` — landing page with ClearVue branding, "Start Free Diagnostic" button
+- `c2c/index.html` — landing page with Clearvue branding, "Start Free Diagnostic" button
 - `c2c/diagnose.html` — loads the shared test runner
 - `shared/static/tests.js` — implement first 6 core tests: Face ID, front camera, rear camera, touch screen, microphone, speaker
 - `shared/static/tests.css` — mobile-first test UI styling
@@ -628,7 +628,7 @@ Both B2B (operator can export per-device) and C2C (consumer downloads directly).
 
 **Steps:**
 
-1. Scaffold `c2c/` directory with `index.html` landing page (static HTML, ClearVue branding, mobile viewport meta)
+1. Scaffold `c2c/` directory with `index.html` landing page (static HTML, Clearvue branding, mobile viewport meta)
 2. Build `shared/templates/test.html` — test runner framework: step-by-step UI, progress bar, pass/fail/skip buttons per test, results collection in JS object
 3. Implement core tests in `shared/static/tests.js`:
    - Face ID (manual confirm — prompt + pass/fail)
@@ -706,7 +706,7 @@ Both B2B (operator can export per-device) and C2C (consumer downloads directly).
 
 1. Add jsPDF 2.x to `c2c/static/vendor/`
 2. Build `c2c/report.html` — results display page with:
-   - ClearVue branding header
+   - Clearvue branding header
    - Timestamp (ISO 8601 + human-readable)
    - Device info section with verification labels
    - Test results grid (pass/fail/not testable with icons)
@@ -717,7 +717,7 @@ Both B2B (operator can export per-device) and C2C (consumer downloads directly).
    - Generate unique report ID (format: `CVR-YYYY-MM-DD-XXXX`)
    - Build PDF layout matching the spec wireframe: header, device info, test results table, verification evidence section, footer
    - Embed screenshot thumbnails (resized to max 400px wide, compressed as JPEG)
-   - Add ClearVue branding, report metadata, verification URL placeholder
+   - Add Clearvue branding, report metadata, verification URL placeholder
 4. Wire "Download PDF" button — `jsPDF.save('clearvue-report-{id}.pdf')`
 5. Test PDF generation on Safari iOS — verify file downloads correctly, images render, text is readable
 6. Test PDF on desktop (open the downloaded file) — verify formatting holds
@@ -760,9 +760,9 @@ Both B2B (operator can export per-device) and C2C (consumer downloads directly).
 2. Add error handling for all browser API permission denials (camera, mic, location) — show helpful "Permission denied" messages with instructions
 3. Optimize Tesseract.js loading — lazy-load WASM only when screenshot upload begins
 4. Add `<meta>` tags for mobile web app: viewport, theme-color, apple-mobile-web-app-capable
-5. Add favicon and Apple touch icon (ClearVue branding)
+5. Add favicon and Apple touch icon (Clearvue branding)
 6. Add anonymous analytics (page views, test completion rate, PDF downloads) — lightweight, privacy-respecting
-7. Add "Powered by ClearVue" branding throughout with link to main site
+7. Add "Powered by Clearvue" branding throughout with link to main site
 8. Cross-device testing: iPhone SE, iPhone 12 mini, iPhone 14, iPhone 15 Pro Max, iPhone 16 — verify layout and tests work across screen sizes
 9. Performance audit: ensure full diagnostic flow (including OCR + PDF) completes in under 5 minutes
 10. Write brief user-facing FAQ: "What does this test?", "Is my data private?", "How do I share my report?"

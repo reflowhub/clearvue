@@ -225,7 +225,7 @@ struct ResultsView: View {
                 .padding(.horizontal, 24)
                 .padding(.bottom, 32)
 
-                Text("\u{00A9} 2026 ClearVue \u{2014} clearvue.rhex.app")
+                Text("\u{00A9} 2026 Clearvue \u{2014} clearvue.rhex.app")
                     .font(.caption2)
                     .foregroundColor(Theme.textDim)
                     .padding(.bottom, 24)
@@ -283,7 +283,7 @@ struct ResultsView: View {
     private func generateAndSharePDF() {
         let generator = PDFGenerator()
         let data = generator.generate(from: report)
-        let fileName = "ClearVue-Report-\(report.id).pdf"
+        let fileName = "Clearvue-Report-\(report.id).pdf"
         let url = FileManager.default.temporaryDirectory.appendingPathComponent(fileName)
         try? data.write(to: url)
         pdfURL = url

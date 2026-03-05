@@ -53,7 +53,7 @@ struct IntroView: View {
             .padding(.horizontal, 24)
             .padding(.bottom, 16)
 
-            Text("\u{00A9} 2026 ClearVue")
+            Text("\u{00A9} 2026 Clearvue")
                 .font(.caption2)
                 .foregroundColor(Theme.textDim)
                 .padding(.bottom, 16)

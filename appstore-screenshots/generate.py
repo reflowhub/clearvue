@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ClearVue App Store Screenshot Generator
+Clearvue App Store Screenshot Generator
 Creates 5 marketing screenshots at 1284x2778 (6.7" iPhone 12-14 Pro Max)
 """
 

@@ -5,8 +5,8 @@ output/
 .env
 
 # Xcode
-ios/ClearVue/ClearVue.xcodeproj/xcuserdata/
-ios/ClearVue/ClearVue.xcodeproj/project.xcworkspace/xcuserdata/
+ios/Clearvue/Clearvue.xcodeproj/xcuserdata/
+ios/Clearvue/Clearvue.xcodeproj/project.xcworkspace/xcuserdata/
 *.xcuserstate
 DerivedData/
 build/

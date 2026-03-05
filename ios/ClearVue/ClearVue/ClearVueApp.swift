@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct ClearVueApp: App {
+struct ClearvueApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()

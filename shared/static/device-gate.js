@@ -1,5 +1,5 @@
 /**
- * ClearVue Device Gate
+ * Clearvue Device Gate
  * Detects non-iPhone browsers and shows a gate screen with QR code.
  * Users can bypass into "demo mode" — results will be labelled accordingly.
  *
@@ -116,7 +116,7 @@
     overlay.id = 'deviceGate';
     overlay.innerHTML = `
         <div class="gate-card">
-            <div class="gate-brand">ClearVue</div>
+            <div class="gate-brand">Clearvue</div>
             <h1 class="gate-title">iPhone Only</h1>
             <p class="gate-desc">
                 This diagnostic is designed to run on your iPhone in Safari.

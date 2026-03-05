@@ -18,7 +18,7 @@ class FaceIDService {
         do {
             let success = try await context.evaluatePolicy(
                 .deviceOwnerAuthenticationWithBiometrics,
-                localizedReason: "ClearVue needs to verify Face ID hardware"
+                localizedReason: "Clearvue needs to verify Face ID hardware"
             )
             return success ? .success : .failed("Authentication was not successful")
         } catch {

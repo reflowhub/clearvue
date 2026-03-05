@@ -16,9 +16,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "A1T00001"
-               BuildableName = "ClearVue.app"
-               BlueprintName = "ClearVue"
-               ReferencedContainer = "container:ClearVue.xcodeproj">
+               BuildableName = "Clearvue.app"
+               BlueprintName = "Clearvue"
+               ReferencedContainer = "container:Clearvue.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -45,9 +45,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "A1T00001"
-            BuildableName = "ClearVue.app"
-            BlueprintName = "ClearVue"
-            ReferencedContainer = "container:ClearVue.xcodeproj">
+            BuildableName = "Clearvue.app"
+            BlueprintName = "Clearvue"
+            ReferencedContainer = "container:Clearvue.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -62,9 +62,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "A1T00001"
-            BuildableName = "ClearVue.app"
-            BlueprintName = "ClearVue"
-            ReferencedContainer = "container:ClearVue.xcodeproj">
+            BuildableName = "Clearvue.app"
+            BlueprintName = "Clearvue"
+            ReferencedContainer = "container:Clearvue.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
